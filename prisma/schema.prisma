@@ -32,12 +32,15 @@ model User {
   last_name   String
   middle_name String?  // Необов'язкове поле
   email       String   @unique
-  car_number  String
+  car_number  String?
   photo       String?  // Необов'язкове поле
   birthday    DateTime? // Необов'язкове поле
   gender      String?  // Необов'язкове поле
   role        Role     @default(USER) // Поле для зберігання ролі користувача
   orders      UserOrder[]
+  password    String
+  accessToken String?
+  refreshToken String?
 }
 
 model UserOrder {
