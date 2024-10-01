@@ -25,6 +25,7 @@ async function bootstrap() {
     .setTitle('Vignettes')
     .setDescription('Description Project')
     .setVersion('1.0.')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
