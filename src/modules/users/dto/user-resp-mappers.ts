@@ -14,7 +14,6 @@ export class UserResponseMapper {
       accessToken: user.accessToken,
       refreshToken: user.refreshToken,
     };
-    console.log(resUser);
     return resUser;
   }
 
