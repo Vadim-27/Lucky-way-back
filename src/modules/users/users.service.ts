@@ -51,7 +51,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
     return user;
@@ -66,7 +66,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
     return user;
