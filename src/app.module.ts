@@ -9,6 +9,7 @@ import { LanguagesModule } from './modules/languages/languages.module';
 import { ImagesModule } from './modules/images/images.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { PostTranslationModule } from './modules/translation/translation.module';
+import { SectionsModule } from './modules/sections/sections.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PostTranslationModule } from './modules/translation/translation.module'
     ImagesModule,
     PostsModule,
     PostTranslationModule,
+    SectionsModule,
     UsersModule,
   ],
   controllers: [AppController],

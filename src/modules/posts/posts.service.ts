@@ -17,6 +17,7 @@ export class PostService {
   > {
     return this.prisma.post.create({
       data: {
+        section_id: createPostDto.section_id,
         country_id: createPostDto.country_id,
         translations: {
           create: createPostDto.translations,

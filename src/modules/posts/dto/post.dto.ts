@@ -15,6 +15,10 @@ export class CreatePostDto {
   @IsNumber()
   country_id?: number;
 
+  @IsOptional()
+  @IsNumber()
+  section_id?: number;
+
   @IsArray()
   @ValidateNested({ each: true })
   translations: PostTranslation[];

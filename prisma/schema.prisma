@@ -10,16 +10,21 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Post {
-  id            Int         @id @default(autoincrement())
-  country_id    Int? 
-  translations  PostTranslation[]
-  images        Image[] 
-  country       Country?    @relation(fields: [country_id], references: [id]) // Це поле не потребує змін
+model Section {
+  id       Int    @id @default(autoincrement())
+  name     String
+  posts    Post[]
 }
 
-
-
+model Post {
+  id           Int         @id @default(autoincrement())
+  country_id   Int? 
+  section_id   Int?
+  translations PostTranslation[]
+  images       Image[]
+  country      Country?    @relation(fields: [country_id], references: [id])
+  section      Section?    @relation(fields: [section_id], references: [id]) // Додаємо зв'язок з Section
+}
 
 model PostTranslation {
   id          Int     @id @default(autoincrement())
