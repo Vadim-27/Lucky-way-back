@@ -24,8 +24,8 @@ let PostController = class PostController {
     create(createPostDto) {
         return this.postService.create(createPostDto);
     }
-    findAll() {
-        return this.postService.findAll();
+    findAll(query) {
+        return this.postService.findAll(query);
     }
     findOne(id) {
         return this.postService.findOne(id);
@@ -41,7 +41,7 @@ exports.PostController = PostController;
 __decorate([
     (0, common_1.Post)(),
     (0, swagger_1.ApiOperation)({ summary: 'Create a new post' }),
-    (0, swagger_1.ApiResponse)({ status: common_1.HttpStatus.CREATED }),
+    (0, swagger_1.ApiResponse)({ status: common_1.HttpStatus.CREATED, type: () => post_dto_1.PostResponse }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [post_dto_1.CreatePostDto]),
@@ -51,8 +51,9 @@ __decorate([
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({ summary: 'Get all posts' }),
     (0, swagger_1.ApiResponse)({ status: common_1.HttpStatus.OK }),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [post_dto_1.PostListQuerytDto]),
     __metadata("design:returntype", void 0)
 ], PostController.prototype, "findAll", null);
 __decorate([

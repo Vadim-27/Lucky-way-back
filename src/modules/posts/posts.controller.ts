@@ -9,8 +9,14 @@ import {
   Delete,
   ParseIntPipe,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
-import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
+import {
+  CreatePostDto,
+  PostListQuerytDto,
+  PostResponse,
+  UpdatePostDto,
+} from './dto/post.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PostService } from './posts.service';
 
@@ -21,7 +27,7 @@ export class PostController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new post' })
-  @ApiResponse({ status: HttpStatus.CREATED })
+  @ApiResponse({ status: HttpStatus.CREATED, type: () => PostResponse })
   create(@Body() createPostDto: CreatePostDto) {
     return this.postService.create(createPostDto);
   }
@@ -29,8 +35,8 @@ export class PostController {
   @Get()
   @ApiOperation({ summary: 'Get all posts' })
   @ApiResponse({ status: HttpStatus.OK })
-  findAll() {
-    return this.postService.findAll();
+  findAll(@Query() query: PostListQuerytDto) {
+    return this.postService.findAll(query);
   }
 
   @Get(':id')

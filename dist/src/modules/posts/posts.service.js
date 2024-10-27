@@ -17,33 +17,63 @@ let PostService = class PostService {
         this.prisma = prisma;
     }
     async create(createPostDto) {
-        return this.prisma.post.create({
+        const isSectionExists = await this.prisma.section.findUnique({
+            where: { id: createPostDto.section_id },
+        });
+        if (!isSectionExists) {
+            throw new common_1.NotFoundException(`Section with ID ${createPostDto.section_id} not found`);
+        }
+        const isCountryExists = await this.prisma.country.findUnique({
+            where: { id: createPostDto.country_id },
+        });
+        if (!isCountryExists) {
+            throw new common_1.NotFoundException(`Country with ID ${createPostDto.section_id} not found`);
+        }
+        const post = await this.prisma.post.create({
             data: {
                 section_id: createPostDto.section_id,
                 country_id: createPostDto.country_id,
-                translations: {
-                    create: createPostDto.translations,
-                },
-                images: {
-                    create: createPostDto.images?.map((url) => ({
-                        url,
-                    })) || [],
-                },
             },
             include: {
-                translations: true,
-                images: true,
                 country: true,
             },
         });
-    }
-    async findAll() {
-        return this.prisma.post.findMany({
-            include: {
-                translations: true,
-                images: true,
+        const translations = await Promise.all(createPostDto.translations.map((translation) => this.prisma.postTranslation.create({
+            data: {
+                ...translation,
+                post_id: post.id,
             },
-        });
+        })));
+        const images = await Promise.all(createPostDto.images?.map((url) => this.prisma.image.create({
+            data: {
+                url,
+                post_id: post.id,
+            },
+        })) || []);
+        return {
+            ...post,
+            translations,
+            images,
+        };
+    }
+    async findAll(query) {
+        console.log(query);
+        try {
+            const filter = {};
+            if (query.section_id) {
+                filter.section_id = +query.section_id;
+            }
+            return this.prisma.post.findMany({
+                where: filter,
+                include: {
+                    translations: true,
+                    images: true,
+                },
+            });
+        }
+        catch (error) {
+            throw new common_1.HttpException(error, common_1.HttpStatus.BAD_REQUEST);
+        }
     }
     async findOne(id) {
         const post = await this.prisma.post.findUnique({
@@ -59,27 +89,24 @@ let PostService = class PostService {
         return post;
     }
     async update(id, updatePostDto) {
-        await this.findOne(id);
-        return this.prisma.post.update({
+        const post = await this.findOne(id);
+        if (!post) {
+            throw new common_1.HttpException('Post not found', common_1.HttpStatus.NOT_FOUND);
+        }
+        if (updatePostDto.country_id) {
+            await this.prisma.post.update({
+                where: { id },
+                data: { country_id: updatePostDto.country_id },
+            });
+        }
+        if (updatePostDto.section_id) {
+            await this.prisma.post.update({
+                where: { id },
+                data: { section_id: updatePostDto.section_id },
+            });
+        }
+        return this.prisma.post.findUnique({
             where: { id },
-            data: {
-                translations: updatePostDto.translations
-                    ? {
-                        deleteMany: { post_id: id },
-                        create: updatePostDto.translations.map((translation) => ({
-                            language_id: translation.language_id,
-                            title: translation.title,
-                            description: translation.description,
-                        })),
-                    }
-                    : undefined,
-                images: updatePostDto.images
-                    ? {
-                        deleteMany: { post_id: id },
-                        create: updatePostDto.images.map((url) => ({ url })),
-                    }
-                    : undefined,
-            },
             include: {
                 translations: true,
                 images: true,

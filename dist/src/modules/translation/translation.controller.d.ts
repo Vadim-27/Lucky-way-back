@@ -1,9 +1,9 @@
 import { PostTranslationService } from './translation.service';
-import { CreatePostTranslationDto, UpdatePostTranslationDto } from './dto/translation.dto';
+import { BasePostTranslationDto, UpdatePostTranslationDto } from './dto/translation.dto';
 export declare class PostTranslationController {
     private readonly postTranslationService;
     constructor(postTranslationService: PostTranslationService);
-    create(createPostTranslationDto: CreatePostTranslationDto): Promise<{
+    create(createPostTranslationDto: BasePostTranslationDto): Promise<{
         id: number;
         description: string;
         title: string;

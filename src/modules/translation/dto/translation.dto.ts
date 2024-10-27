@@ -3,7 +3,7 @@ import { IsString, IsInt, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'; // Імпортуємо ApiProperty
 import { PostTranslation } from '@prisma/client';
 
-export class CreatePostTranslationDto implements Omit<PostTranslation, 'id'> {
+export class BasePostTranslationDto implements Omit<PostTranslation, 'id'> {
   @ApiProperty({
     description: 'ID посту, до якого відноситься переклад',
   })
@@ -29,17 +29,29 @@ export class CreatePostTranslationDto implements Omit<PostTranslation, 'id'> {
   description: string;
 }
 
+export class CreatePostTranslationDto {
+  @ApiProperty({
+    description: 'ID мови, на яку здійснюється переклад',
+  })
+  @IsInt()
+  language_id: number;
+
+  @ApiProperty({
+    description: 'Заголовок перекладу',
+  })
+  @IsString()
+  title: string;
+
+  @ApiProperty({
+    description: 'Опис перекладу',
+  })
+  @IsString()
+  description: string;
+}
+
 export class UpdatePostTranslationDto
   implements Partial<Omit<PostTranslation, 'id'>>
 {
-  @ApiProperty({
-    description: 'ID посту, до якого відноситься переклад',
-    required: false, // Вказуємо, що це поле є необов’язковим
-  })
-  @IsOptional()
-  @IsInt()
-  post_id?: number;
-
   @ApiProperty({
     description: 'ID мови, на яку здійснюється переклад',
     required: false, // Вказуємо, що це поле є необов’язковим
