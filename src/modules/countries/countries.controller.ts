@@ -1,5 +1,4 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
-import { CountriesService } from './countries.service';
 import { Country } from '@prisma/client';
 import {
   ApiTags,
@@ -8,6 +7,7 @@ import {
   ApiParam,
   ApiExcludeEndpoint,
 } from '@nestjs/swagger';
+import { CountriesService } from './countries.service';
 
 @ApiTags('countries') // Тег для групування ендпоінтів
 @Controller('countries')

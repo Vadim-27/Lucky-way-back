@@ -14,8 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CountriesController = void 0;
 const common_1 = require("@nestjs/common");
-const countries_service_1 = require("./countries.service");
 const swagger_1 = require("@nestjs/swagger");
+const countries_service_1 = require("./countries.service");
 let CountriesController = class CountriesController {
     constructor(countriesService) {
         this.countriesService = countriesService;
