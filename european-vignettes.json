@@ -1,0 +1,413 @@
+{
+  "countries": [
+    {
+      "id": 1,
+      "name": "Austria",
+      "iso2": "AT",
+      "currency": "EUR",
+      "toll_roads": [
+        {
+          "id": 1,
+          "name": "Austrian Motorways",
+          "toll_type": "vignette",
+          "description": "Required for all motorways and expressways in Austria",
+          "vehicle_types": [
+            {
+              "id": 1,
+              "type": "Motorcycle",
+              "description": "Two-wheeled vehicles",
+              "cost": 37.20,
+              "vingetteOptions": [
+                {
+                  "operation_type": "digital",
+                  "period": "Annual",
+                  "description": "Valid for 1 year",
+                  "cost": 37.20,
+                  "link": "https://shop.asfinag.at/en/"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "2-months",
+                  "description": "Valid for 2 months",
+                  "cost": 14.10,
+                  "link": "https://shop.asfinag.at/en/"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "10-days",
+                  "description": "Valid for 10 days",
+                  "cost": 5.80,
+                  "link": "https://shop.asfinag.at/en/"
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "type": "Car/Van up to 3.5t",
+              "description": "Vehicles up to 3.5 tonnes",
+              "vingetteOptions": [
+                {
+                  "operation_type": "digital",
+                  "period": "Annual",
+                  "description": "Valid for 1 year",
+                  "cost": 96.40,
+                  "link": "https://shop.asfinag.at/en/"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "2-months",
+                  "description": "Valid for 2 months",
+                  "cost": 29.00,
+                  "link": "https://shop.asfinag.at/en/"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "10-days",
+                  "description": "Valid for 10 days",
+                  "cost": 9.90,
+                  "link": "https://shop.asfinag.at/en/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Hungary",
+      "iso2": "HU",
+      "currency": "HUF",
+      "toll_roads": [
+        {
+          "id": 2,
+          "name": "Hungarian Motorways",
+          "toll_type": "e-vignette",
+          "description": "Required for motorways and certain main roads",
+          "vehicle_types": [
+            {
+              "id": 3,
+              "type": "D1 (Motorcycles and cars up to 3.5t)",
+              "description": "Motorcycles and vehicles up to 3.5 tonnes",
+              "vingetteOptions": [
+                {
+                  "operation_type": "digital",
+                  "period": "Annual",
+                  "description": "Valid for 1 year",
+                  "cost": 49000,
+                  "link": "https://ematrica.nemzetiutdij.hu/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "Monthly",
+                  "description": "Valid for 30 days",
+                  "cost": 8900,
+                  "link": "https://ematrica.nemzetiutdij.hu/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "Weekly",
+                  "description": "Valid for 10 days",
+                  "cost": 5000,
+                  "link": "https://ematrica.nemzetiutdij.hu/en"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Czech Republic",
+      "iso2": "CZ",
+      "currency": "CZK",
+      "toll_roads": [
+        {
+          "id": 3,
+          "name": "Czech Motorways",
+          "toll_type": "digital-vignette",
+          "description": "Required for all motorways and expressways",
+          "vehicle_types": [
+            {
+              "id": 4,
+              "type": "Vehicles up to 3.5t",
+              "description": "Cars and vans up to 3.5 tonnes",
+              "vingetteOptions": [
+                {
+                  "operation_type": "digital",
+                  "period": "Annual",
+                  "description": "Valid for 1 year",
+                  "cost": 1500,
+                  "link": "https://edalnice.cz/en/index.html"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "30-day",
+                  "description": "Valid for 30 days",
+                  "cost": 440,
+                  "link": "https://edalnice.cz/en/index.html"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "10-day",
+                  "description": "Valid for 10 days",
+                  "cost": 310,
+                  "link": "https://edalnice.cz/en/index.html"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Slovakia",
+      "iso2": "SK",
+      "currency": "EUR",
+      "toll_roads": [
+        {
+          "id": 4,
+          "name": "Slovak Motorways",
+          "toll_type": "e-vignette",
+          "description": "Required for motorways and expressways",
+          "vehicle_types": [
+            {
+              "id": 5,
+              "type": "Vehicles up to 3.5t",
+              "description": "Cars and vans up to 3.5 tonnes",
+              "vingetteOptions": [
+                {
+                  "operation_type": "digital",
+                  "period": "Annual",
+                  "description": "Valid for 365 days",
+                  "cost": 50.00,
+                  "link": "https://eznamka.sk/en/"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "30-day",
+                  "description": "Valid for 30 days",
+                  "cost": 14.00,
+                  "link": "https://eznamka.sk/en/"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "10-day",
+                  "description": "Valid for 10 days",
+                  "cost": 10.00,
+                  "link": "https://eznamka.sk/en/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Switzerland",
+      "iso2": "CH",
+      "currency": "CHF",
+      "toll_roads": [
+        {
+          "id": 5,
+          "name": "Swiss Motorways",
+          "toll_type": "vignette",
+          "description": "Required for all motorways in Switzerland",
+          "vehicle_types": [
+            {
+              "id": 6,
+              "type": "All vehicles up to 3.5t",
+              "description": "Required for all vehicles up to 3.5 tonnes",
+              "vingetteOptions": [
+                {
+                  "operation_type": "sticker",
+                  "period": "Annual",
+                  "description": "Valid for 14 months (Dec to Jan)",
+                  "cost": 40.00,
+                  "link": "https://www.ezv.admin.ch/ezv/en/home/information-individuals/documents-for-travellers-and-road-taxes/motorway-charge-sticker.html"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Slovenia",
+      "iso2": "SI",
+      "currency": "EUR",
+      "toll_roads": [
+        {
+          "id": 6,
+          "name": "Slovenian Motorways",
+          "toll_type": "e-vignette",
+          "description": "Required for motorways and expressways",
+          "vehicle_types": [
+            {
+              "id": 7,
+              "type": "Motorcycles",
+              "description": "Two-wheeled vehicles",
+              "vingetteOptions": [
+                {
+                  "operation_type": "digital",
+                  "period": "Annual",
+                  "description": "Valid for 1 year",
+                  "cost": 55.00,
+                  "link": "https://evinjeta.dars.si/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "6-months",
+                  "description": "Valid for half year",
+                  "cost": 30.00,
+                  "link": "https://evinjeta.dars.si/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "Weekly",
+                  "description": "Valid for 7 days",
+                  "cost": 7.50,
+                  "link": "https://evinjeta.dars.si/en"
+                }
+              ]
+            },
+            {
+              "id": 8,
+              "type": "Vehicles up to 3.5t",
+              "description": "Cars and vans up to 3.5 tonnes",
+              "vingetteOptions": [
+                {
+                  "operation_type": "digital",
+                  "period": "Annual",
+                  "description": "Valid for 1 year",
+                  "cost": 110.00,
+                  "link": "https://evinjeta.dars.si/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "6-months",
+                  "description": "Valid for half year",
+                  "cost": 60.00,
+                  "link": "https://evinjeta.dars.si/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "Weekly",
+                  "description": "Valid for 7 days",
+                  "cost": 15.00,
+                  "link": "https://evinjeta.dars.si/en"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Bulgaria",
+      "iso2": "BG",
+      "currency": "BGN",
+      "toll_roads": [
+        {
+          "id": 7,
+          "name": "Bulgarian Motorways",
+          "toll_type": "e-vignette",
+          "description": "Required for motorways and main roads",
+          "vehicle_types": [
+            {
+              "id": 9,
+              "type": "Light vehicles up to 3.5t",
+              "description": "Cars and vans up to 3.5 tonnes",
+              "vingetteOptions": [
+                {
+                  "operation_type": "digital",
+                  "period": "Annual",
+                  "description": "Valid for 1 year",
+                  "cost": 97.00,
+                  "link": "https://web.bgtoll.bg/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "Quarterly",
+                  "description": "Valid for 3 months",
+                  "cost": 54.00,
+                  "link": "https://web.bgtoll.bg/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "Monthly",
+                  "description": "Valid for 1 month",
+                  "cost": 30.00,
+                  "link": "https://web.bgtoll.bg/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "Weekly",
+                  "description": "Valid for 7 days",
+                  "cost": 15.00,
+                  "link": "https://web.bgtoll.bg/en"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Romania",
+      "iso2": "RO",
+      "currency": "RON",
+      "toll_roads": [
+        {
+          "id": 8,
+          "name": "Romanian Motorways",
+          "toll_type": "rovignette",
+          "description": "Required for all national roads and motorways",
+          "vehicle_types": [
+            {
+              "id": 10,
+              "type": "Cars",
+              "description": "Passenger vehicles",
+              "vingetteOptions": [
+                {
+                  "operation_type": "digital",
+                  "period": "Annual",
+                  "description": "Valid for 12 months",
+                  "cost": 28.00,
+                  "link": "https://www.rovinieta.ro/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "90-days",
+                  "description": "Valid for 90 days",
+                  "cost": 13.00,
+                  "link": "https://www.rovinieta.ro/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "30-days",
+                  "description": "Valid for 30 days",
+                  "cost": 6.00,
+                  "link": "https://www.rovinieta.ro/en"
+                },
+                {
+                  "operation_type": "digital",
+                  "period": "7-days",
+                  "description": "Valid for 7 days",
+                  "cost": 3.00,
+                  "link": "https://www.rovinieta.ro/en"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

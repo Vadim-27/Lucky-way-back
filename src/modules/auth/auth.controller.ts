@@ -30,7 +30,7 @@ import { UserResponseMapper } from '../users/dto/user-resp-mappers';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  //LOGIN
+  /* ---- LOGIN ---  */
   @ApiOperation({ summary: 'Sign in' })
   @ApiBody({ type: SignInUserRequestDto })
   @ApiResponse({
