@@ -22,7 +22,11 @@ let SectionsService = class SectionsService {
         });
     }
     async findAll() {
-        return this.prisma.section.findMany();
+        return this.prisma.section.findMany({
+            orderBy: {
+                id: 'asc',
+            },
+        });
     }
     async findOne(id) {
         const section = await this.prisma.section.findUnique({
@@ -42,7 +46,7 @@ let SectionsService = class SectionsService {
     }
     async remove(id) {
         const section = await this.findOne(id);
-        this.prisma.section.delete({
+        await this.prisma.section.delete({
             where: { id: section.id },
         });
         return `Section with ID ${id} delete`;

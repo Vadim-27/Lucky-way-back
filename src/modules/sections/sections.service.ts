@@ -16,7 +16,11 @@ export class SectionsService {
 
   // Метод для отримання всіх секцій
   async findAll(): Promise<Section[]> {
-    return this.prisma.section.findMany();
+    return this.prisma.section.findMany({
+      orderBy: {
+        id: 'asc', // або 'desc' для сортування за спаданням
+      },
+    });
   }
 
   // Метод для отримання секції за ID
@@ -50,7 +54,7 @@ export class SectionsService {
   async remove(id: number): Promise<string> {
     const section = await this.findOne(id); // Перевіряємо наявність секції
 
-    this.prisma.section.delete({
+    await this.prisma.section.delete({
       where: { id: section.id }, // Використовуємо знайдений ID
     });
     return `Section with ID ${id} delete`;
