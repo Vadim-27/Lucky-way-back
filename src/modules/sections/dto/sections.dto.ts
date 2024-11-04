@@ -9,13 +9,14 @@ import { IsOptional } from 'class-validator';
 
 // DTO для створення Section з перекладами
 
-export class BaseSectionDto implements Omit<Section, 'id'> {
+export class BaseSectionDto implements Partial<Omit<Section, 'id'>> {
   @ApiProperty()
   name: string;
-  @ApiProperty()
-  id: number;
-  @ApiProperty()
-  description: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  description?: string;
+
   @ApiProperty({
     type: [BaseSectionTranslationDto],
   })
@@ -28,8 +29,10 @@ export class CreateSectionDto extends PickType(BaseSectionDto, [
 ]) {
   @ApiProperty({
     type: [CreateSectionTranslationDtoForSection],
+    required: false,
   })
-  translations: CreateSectionTranslationDtoForSection[];
+  @IsOptional()
+  translations: CreateSectionTranslationDtoForSection[] | [];
 }
 
 // DTO для оновлення Section з перекладами

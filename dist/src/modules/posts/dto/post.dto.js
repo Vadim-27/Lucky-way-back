@@ -37,6 +37,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)({
         type: [translation_dto_1.CreatePostTranslationDto],
+        required: false,
     }),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ValidateNested)({ each: true }),

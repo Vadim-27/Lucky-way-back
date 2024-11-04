@@ -14,7 +14,7 @@ model Section {
   id            Int                  @id @default(autoincrement())
   name          String
   description   String?
-  translations  SectionTranslation[] // Визначаємо зв'язок з SectionTranslation
+  translations  SectionTranslation[]// Визначаємо зв'язок з SectionTranslation
   posts         Post[]               // Додаємо зв'язок з Post
 }
 

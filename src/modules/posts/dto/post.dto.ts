@@ -29,10 +29,11 @@ export class CreatePostDto {
 
   @ApiProperty({
     type: [CreatePostTranslationDto],
+    required: false,
   })
   @IsArray()
   @ValidateNested({ each: true })
-  translations: CreatePostTranslationDto[];
+  translations: CreatePostTranslationDto[] | [];
 
   @ApiPropertyOptional({
     description: 'Зображення поста',

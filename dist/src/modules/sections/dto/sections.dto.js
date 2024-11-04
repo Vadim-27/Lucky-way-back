@@ -21,11 +21,8 @@ __decorate([
     __metadata("design:type", String)
 ], BaseSectionDto.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", Number)
-], BaseSectionDto.prototype, "id", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ required: false }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], BaseSectionDto.prototype, "description", void 0);
 __decorate([
@@ -43,7 +40,9 @@ exports.CreateSectionDto = CreateSectionDto;
 __decorate([
     (0, swagger_1.ApiProperty)({
         type: [section_translation_dto_1.CreateSectionTranslationDtoForSection],
+        required: false,
     }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Array)
 ], CreateSectionDto.prototype, "translations", void 0);
 class UpdateSectionDto {

@@ -4,7 +4,7 @@ import { CountryDto } from '../../countries/dto/countries.dto';
 export declare class CreatePostDto {
     country_id?: number;
     section_id?: number;
-    translations: CreatePostTranslationDto[];
+    translations: CreatePostTranslationDto[] | [];
     images?: string[];
 }
 export declare class UpdatePostDto {
