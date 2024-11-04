@@ -12,27 +12,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SectionsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../../prisma/prisma.service");
+const library_1 = require("@prisma/client/runtime/library");
 let SectionsService = class SectionsService {
     constructor(prisma) {
         this.prisma = prisma;
     }
     async create(createSectionDto) {
-        return this.prisma.section.create({
-            data: {
-                name: createSectionDto.name,
-                description: createSectionDto.description,
-                translations: {
-                    create: createSectionDto.translations?.map((translation) => ({
-                        languageId: translation.languageId,
-                        title: translation.title,
-                        description: translation.description,
-                    })),
+        try {
+            return await this.prisma.section.create({
+                data: {
+                    name: createSectionDto.name,
+                    description: createSectionDto.description,
+                    translations: {
+                        create: createSectionDto.translations?.map((translation) => ({
+                            languageId: translation.languageId,
+                            title: translation.title,
+                            description: translation.description,
+                        })),
+                    },
                 },
-            },
-            include: {
-                translations: true,
-            },
-        });
+                include: {
+                    translations: true,
+                },
+            });
+        }
+        catch (error) {
+            if (error instanceof library_1.PrismaClientKnownRequestError &&
+                error.code === 'P2002') {
+                throw new common_1.ConflictException(`Unique constraint failed on fields: sectionId, languageId`);
+            }
+            throw error;
+        }
     }
     async findAll() {
         return this.prisma.section.findMany({

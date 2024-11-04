@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common'; // Імплементуємо NotFoundException
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'; // Імплементуємо NotFoundException
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Section, SectionTranslation } from '@prisma/client';
 import { CreateSectionDto, UpdateSectionDto } from './dto/sections.dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class SectionsService {
@@ -9,23 +10,36 @@ export class SectionsService {
 
   // Метод для створення нової секції
   // sections.service.ts
-  async create(createSectionDto: CreateSectionDto): Promise<Section> {
-    return this.prisma.section.create({
-      data: {
-        name: createSectionDto.name,
-        description: createSectionDto.description,
-        translations: {
-          create: createSectionDto.translations?.map((translation) => ({
-            languageId: translation.languageId,
-            title: translation.title,
-            description: translation.description,
-          })),
+   async create(createSectionDto: CreateSectionDto): Promise<Section> {
+    try {
+      return await this.prisma.section.create({
+        data: {
+          name: createSectionDto.name,
+          description: createSectionDto.description,
+          translations: {
+            create: createSectionDto.translations?.map((translation) => ({
+              languageId: translation.languageId,
+              title: translation.title,
+              description: translation.description,
+            })),
+          },
         },
-      },
-      include: {
-        translations: true, // Додаємо це, щоб включити переклади
-      },
-    });
+        include: {
+          translations: true, // Додаємо це, щоб включити переклади
+        },
+      });
+    } catch (error) {
+      // Перевіряємо наявність помилки унікальності
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002' // Код помилки для порушення унікальності
+      ) {
+        throw new ConflictException(
+          `Unique constraint failed on fields: sectionId, languageId`
+        );
+      }
+      throw error; // Інші помилки передаємо далі
+    }
   }
 
   // Метод для отримання всіх секцій
