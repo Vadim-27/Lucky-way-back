@@ -6,7 +6,10 @@ export declare class BaseSectionTranslationDto implements Omit<SectionTranslatio
     title: string;
     description: string;
 }
-declare const UpdateSectionTranslationDto_base: import("@nestjs/common").Type<Pick<BaseSectionTranslationDto, "id" | "description" | "title" | "languageId">>;
+declare const UpdateSectionTranslationDtoForSection_base: import("@nestjs/common").Type<Pick<BaseSectionTranslationDto, "id" | "description" | "title" | "languageId">>;
+export declare class UpdateSectionTranslationDtoForSection extends UpdateSectionTranslationDtoForSection_base {
+}
+declare const UpdateSectionTranslationDto_base: import("@nestjs/common").Type<Pick<BaseSectionTranslationDto, "description" | "title" | "languageId">>;
 export declare class UpdateSectionTranslationDto extends UpdateSectionTranslationDto_base {
 }
 declare const CreateSectionTranslationDto_base: import("@nestjs/common").Type<Pick<BaseSectionTranslationDto, "description" | "title" | "languageId" | "sectionId">>;

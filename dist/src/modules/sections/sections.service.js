@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SectionsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../../prisma/prisma.service");
+const client_1 = require("@prisma/client");
 const library_1 = require("@prisma/client/runtime/library");
 let SectionsService = class SectionsService {
     constructor(prisma) {
@@ -69,30 +70,48 @@ let SectionsService = class SectionsService {
     async update(id, updateSectionDto) {
         const section = await this.findOne(id);
         const { translations, ...sectionData } = updateSectionDto;
-        return this.prisma.section.update({
-            where: { id: section.id },
-            data: {
-                ...sectionData,
-                translations: translations
-                    ? {
-                        upsert: translations.map((translation) => ({
-                            where: {
-                                id: translation.id,
-                            },
-                            update: {
-                                title: translation.title,
-                                description: translation.description,
-                            },
-                            create: {
-                                languageId: translation.languageId,
-                                title: translation.title,
-                                description: translation.description,
-                            },
-                        })),
-                    }
-                    : undefined,
-            },
-        });
+        try {
+            return await this.prisma.section.update({
+                where: { id: section.id },
+                data: {
+                    ...sectionData,
+                    translations: translations?.length
+                        ? {
+                            upsert: translations.map((translation) => ({
+                                where: translation.id
+                                    ? { id: translation.id }
+                                    : {
+                                        sectionId_languageId: {
+                                            sectionId: section.id,
+                                            languageId: translation.languageId,
+                                        },
+                                    },
+                                update: {
+                                    title: translation.title,
+                                    description: translation.description,
+                                },
+                                create: {
+                                    languageId: translation.languageId,
+                                    title: translation.title,
+                                    description: translation.description,
+                                },
+                            })),
+                        }
+                        : undefined,
+                },
+            });
+        }
+        catch (error) {
+            if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+                if (error.code === 'P2025') {
+                    throw new common_1.NotFoundException(`Section with ID ${id} not found.`);
+                }
+                if (error.code === 'P2002') {
+                    throw new common_1.HttpException('Unique constraint failed on a field. Please ensure unique values.', common_1.HttpStatus.CONFLICT);
+                }
+            }
+            throw new common_1.HttpException('Failed to update section', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     async remove(id) {
         const section = await this.findOne(id);

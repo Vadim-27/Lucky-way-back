@@ -1,12 +1,15 @@
 import {
   ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common'; // Імплементуємо NotFoundException
 import { PrismaService } from '../../../prisma/prisma.service';
-import { Section, SectionTranslation } from '@prisma/client';
+import { Section, Prisma } from '@prisma/client';
 import { CreateSectionDto, UpdateSectionDto } from './dto/sections.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { UpdateSectionTranslationDtoForSection } from '../section-translation/dto/section-translation.dto';
 
 @Injectable()
 export class SectionsService {
@@ -76,8 +79,6 @@ export class SectionsService {
   }
 
   // Метод для оновлення секції
-  // sections.service.ts
-  // sections.service.ts
   async update(
     id: number,
     updateSectionDto: UpdateSectionDto,
@@ -86,30 +87,55 @@ export class SectionsService {
 
     const { translations, ...sectionData } = updateSectionDto;
 
-    return this.prisma.section.update({
-      where: { id: section.id },
-      data: {
-        ...sectionData,
-        translations: translations
-          ? {
-              upsert: translations.map((translation) => ({
-                where: {
-                  id: translation.id, // Використовуйте id для знаходження
-                },
-                update: {
-                  title: translation.title,
-                  description: translation.description,
-                },
-                create: {
-                  languageId: translation.languageId,
-                  title: translation.title,
-                  description: translation.description,
-                },
-              })),
-            }
-          : undefined,
-      },
-    });
+    try {
+      return await this.prisma.section.update({
+        where: { id: section.id },
+        data: {
+          ...sectionData,
+          translations: translations?.length // Перевірка, чи є елементи в масиві translations
+            ? {
+                upsert: translations.map(
+                  (translation: UpdateSectionTranslationDtoForSection) => ({
+                    where: translation.id
+                      ? { id: translation.id }
+                      : {
+                          sectionId_languageId: {
+                            sectionId: section.id,
+                            languageId: translation.languageId,
+                          },
+                        },
+                    update: {
+                      title: translation.title,
+                      description: translation.description,
+                    },
+                    create: {
+                      languageId: translation.languageId,
+                      title: translation.title,
+                      description: translation.description,
+                    },
+                  }),
+                ),
+              }
+            : undefined, // Якщо translations відсутнє або порожнє, пропускаємо це поле
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(`Section with ID ${id} not found.`);
+        }
+        if (error.code === 'P2002') {
+          throw new HttpException(
+            'Unique constraint failed on a field. Please ensure unique values.',
+            HttpStatus.CONFLICT,
+          );
+        }
+      }
+      throw new HttpException(
+        'Failed to update section',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   // Метод для видалення секції

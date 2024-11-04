@@ -10,9 +10,10 @@ declare const CreateSectionDto_base: import("@nestjs/common").Type<Pick<BaseSect
 export declare class CreateSectionDto extends CreateSectionDto_base {
     translations: CreateSectionTranslationDtoForSection[];
 }
-declare const UpdateSectionDto_base: import("@nestjs/common").Type<Pick<BaseSectionDto, "name" | "description">>;
-export declare class UpdateSectionDto extends UpdateSectionDto_base {
-    translations: UpdateSectionTranslationDto[];
+export declare class UpdateSectionDto {
+    name?: string;
+    description?: string;
+    translations?: UpdateSectionTranslationDto[];
 }
 export declare class ResponseSectionDto {
     id: number;

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResponseSectionDto = exports.UpdateSectionDto = exports.CreateSectionDto = exports.BaseSectionDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const section_translation_dto_1 = require("../../section-translation/dto/section-translation.dto");
+const class_validator_1 = require("class-validator");
 class BaseSectionDto {
 }
 exports.BaseSectionDto = BaseSectionDto;
@@ -45,16 +46,26 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], CreateSectionDto.prototype, "translations", void 0);
-class UpdateSectionDto extends (0, swagger_1.PickType)(BaseSectionDto, [
-    'name',
-    'description',
-]) {
+class UpdateSectionDto {
 }
 exports.UpdateSectionDto = UpdateSectionDto;
 __decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, swagger_1.ApiProperty)({ required: false }),
+    __metadata("design:type", String)
+], UpdateSectionDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: false }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateSectionDto.prototype, "description", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({
         type: [section_translation_dto_1.UpdateSectionTranslationDto],
+        required: false,
     }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Array)
 ], UpdateSectionDto.prototype, "translations", void 0);
 class ResponseSectionDto {

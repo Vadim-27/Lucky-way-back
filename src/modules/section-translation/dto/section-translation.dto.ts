@@ -22,9 +22,14 @@ export class BaseSectionTranslationDto
   description: string;
 }
 
-export class UpdateSectionTranslationDto extends PickType(
+export class UpdateSectionTranslationDtoForSection extends PickType(
   BaseSectionTranslationDto,
   ['languageId', 'title', 'description', 'id'],
+) {}
+
+export class UpdateSectionTranslationDto extends PickType(
+  BaseSectionTranslationDto,
+  ['languageId', 'title', 'description'],
 ) {}
 
 export class CreateSectionTranslationDto extends PickType(

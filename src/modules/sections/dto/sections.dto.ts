@@ -5,6 +5,7 @@ import {
   CreateSectionTranslationDtoForSection,
   UpdateSectionTranslationDto,
 } from '../../section-translation/dto/section-translation.dto';
+import { IsOptional } from 'class-validator';
 
 // DTO для створення Section з перекладами
 
@@ -32,14 +33,20 @@ export class CreateSectionDto extends PickType(BaseSectionDto, [
 }
 
 // DTO для оновлення Section з перекладами
-export class UpdateSectionDto extends PickType(BaseSectionDto, [
-  'name',
-  'description',
-]) {
+export class UpdateSectionDto {
+  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  name?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  description?: string;
   @ApiProperty({
     type: [UpdateSectionTranslationDto],
+    required: false,
   })
-  translations: UpdateSectionTranslationDto[];
+  @IsOptional()
+  translations?: UpdateSectionTranslationDto[];
 }
 
 // DTO для відповіді, включаючи переклади
