@@ -9,24 +9,54 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ResponseSectionDto = exports.UpdateSectionDto = exports.CreateSectionDto = void 0;
+exports.ResponseSectionDto = exports.UpdateSectionDto = exports.CreateSectionDto = exports.BaseSectionDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-const class_validator_1 = require("class-validator");
-class CreateSectionDto {
+const section_translation_dto_1 = require("../../section-translation/dto/section-translation.dto");
+class BaseSectionDto {
 }
-exports.CreateSectionDto = CreateSectionDto;
+exports.BaseSectionDto = BaseSectionDto;
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
-], CreateSectionDto.prototype, "name", void 0);
+], BaseSectionDto.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ required: false }),
-    (0, class_validator_1.IsOptional)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], BaseSectionDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
-], CreateSectionDto.prototype, "description", void 0);
-class UpdateSectionDto {
+], BaseSectionDto.prototype, "description", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        type: [section_translation_dto_1.BaseSectionTranslationDto],
+    }),
+    __metadata("design:type", Array)
+], BaseSectionDto.prototype, "translations", void 0);
+class CreateSectionDto extends (0, swagger_1.PickType)(BaseSectionDto, [
+    'name',
+    'description',
+]) {
+}
+exports.CreateSectionDto = CreateSectionDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        type: [section_translation_dto_1.CreateSectionTranslationDtoForSection],
+    }),
+    __metadata("design:type", Array)
+], CreateSectionDto.prototype, "translations", void 0);
+class UpdateSectionDto extends (0, swagger_1.PickType)(BaseSectionDto, [
+    'name',
+    'description',
+]) {
 }
 exports.UpdateSectionDto = UpdateSectionDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        type: [section_translation_dto_1.UpdateSectionTranslationDto],
+    }),
+    __metadata("design:type", Array)
+], UpdateSectionDto.prototype, "translations", void 0);
 class ResponseSectionDto {
 }
 exports.ResponseSectionDto = ResponseSectionDto;
@@ -38,4 +68,12 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ResponseSectionDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: false }),
+    __metadata("design:type", String)
+], ResponseSectionDto.prototype, "description", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Array)
+], ResponseSectionDto.prototype, "translations", void 0);
 //# sourceMappingURL=sections.dto.js.map
