@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'; // Імплементуємо NotFoundException
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'; // Імплементуємо NotFoundException
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Section, SectionTranslation } from '@prisma/client';
 import { CreateSectionDto, UpdateSectionDto } from './dto/sections.dto';
@@ -10,7 +14,7 @@ export class SectionsService {
 
   // Метод для створення нової секції
   // sections.service.ts
-   async create(createSectionDto: CreateSectionDto): Promise<Section> {
+  async create(createSectionDto: CreateSectionDto): Promise<Section> {
     try {
       return await this.prisma.section.create({
         data: {
@@ -35,7 +39,7 @@ export class SectionsService {
         error.code === 'P2002' // Код помилки для порушення унікальності
       ) {
         throw new ConflictException(
-          `Unique constraint failed on fields: sectionId, languageId`
+          `Unique constraint failed on fields: sectionId, languageId`,
         );
       }
       throw error; // Інші помилки передаємо далі
