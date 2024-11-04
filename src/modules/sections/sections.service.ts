@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'; // Імплементуємо NotFoundException
 import { PrismaService } from '../../../prisma/prisma.service';
-import { Section } from '@prisma/client';
+import { Section, SectionTranslation } from '@prisma/client';
 import { CreateSectionDto, UpdateSectionDto } from './dto/sections.dto';
 
 @Injectable()
@@ -8,21 +8,45 @@ export class SectionsService {
   constructor(private readonly prisma: PrismaService) {}
 
   // Метод для створення нової секції
+  // sections.service.ts
   async create(createSectionDto: CreateSectionDto): Promise<Section> {
     return this.prisma.section.create({
-      data: { ...createSectionDto }, // правильно передаємо дані
+      data: {
+        name: createSectionDto.name,
+        description: createSectionDto.description,
+        translations: {
+          create: createSectionDto.translations?.map((translation) => ({
+            languageId: translation.languageId,
+            title: translation.title,
+            description: translation.description,
+          })),
+        },
+      },
+      include: {
+        translations: true, // Додаємо це, щоб включити переклади
+      },
     });
   }
 
   // Метод для отримання всіх секцій
   async findAll(): Promise<Section[]> {
-    return this.prisma.section.findMany();
+    return this.prisma.section.findMany({
+      include: {
+        translations: true, // Включаємо переклади у відповідь
+      },
+      orderBy: {
+        id: 'asc', // або 'desc' для сортування за спаданням
+      },
+    });
   }
 
   // Метод для отримання секції за ID
   async findOne(id: number): Promise<Section> {
     const section = await this.prisma.section.findUnique({
       where: { id },
+      include: {
+        translations: true, // Включаємо переклади у відповідь
+      },
     });
 
     // Якщо секція не знайдена, генеруємо виключення
@@ -34,15 +58,39 @@ export class SectionsService {
   }
 
   // Метод для оновлення секції
+  // sections.service.ts
+  // sections.service.ts
   async update(
     id: number,
     updateSectionDto: UpdateSectionDto,
   ): Promise<Section> {
     const section = await this.findOne(id); // Перевіряємо наявність секції
 
+    const { translations, ...sectionData } = updateSectionDto;
+
     return this.prisma.section.update({
-      where: { id: section.id }, // Використовуємо знайдений ID
-      data: updateSectionDto,
+      where: { id: section.id },
+      data: {
+        ...sectionData,
+        translations: translations
+          ? {
+              upsert: translations.map((translation) => ({
+                where: {
+                  id: translation.id, // Використовуйте id для знаходження
+                },
+                update: {
+                  title: translation.title,
+                  description: translation.description,
+                },
+                create: {
+                  languageId: translation.languageId,
+                  title: translation.title,
+                  description: translation.description,
+                },
+              })),
+            }
+          : undefined,
+      },
     });
   }
 
@@ -50,9 +98,16 @@ export class SectionsService {
   async remove(id: number): Promise<string> {
     const section = await this.findOne(id); // Перевіряємо наявність секції
 
-    this.prisma.section.delete({
+    // Спочатку видаляємо всі переклади, пов'язані з цією секцією
+    await this.prisma.sectionTranslation.deleteMany({
+      where: { sectionId: section.id }, // Знаходимо всі переклади для цієї секції
+    });
+
+    // Тепер видаляємо саму секцію
+    await this.prisma.section.delete({
       where: { id: section.id }, // Використовуємо знайдений ID
     });
-    return `Section with ID ${id} delete`;
+
+    return `Section with ID ${id} deleted`;
   }
 }

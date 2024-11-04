@@ -19,6 +19,7 @@ const images_module_1 = require("./modules/images/images.module");
 const posts_module_1 = require("./modules/posts/posts.module");
 const translation_module_1 = require("./modules/translation/translation.module");
 const sections_module_1 = require("./modules/sections/sections.module");
+const section_translation_module_1 = require("./modules/section-translation/section-translation.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,6 +36,7 @@ exports.AppModule = AppModule = __decorate([
             posts_module_1.PostsModule,
             translation_module_1.PostTranslationModule,
             sections_module_1.SectionsModule,
+            section_translation_module_1.SectionTranslationModule,
             users_module_1.UsersModule,
         ],
         controllers: [app_controller_1.AppController],

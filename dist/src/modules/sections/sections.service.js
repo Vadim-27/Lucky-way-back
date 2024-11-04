@@ -18,15 +18,38 @@ let SectionsService = class SectionsService {
     }
     async create(createSectionDto) {
         return this.prisma.section.create({
-            data: { ...createSectionDto },
+            data: {
+                name: createSectionDto.name,
+                description: createSectionDto.description,
+                translations: {
+                    create: createSectionDto.translations?.map((translation) => ({
+                        languageId: translation.languageId,
+                        title: translation.title,
+                        description: translation.description,
+                    })),
+                },
+            },
+            include: {
+                translations: true,
+            },
         });
     }
     async findAll() {
-        return this.prisma.section.findMany();
+        return this.prisma.section.findMany({
+            include: {
+                translations: true,
+            },
+            orderBy: {
+                id: 'asc',
+            },
+        });
     }
     async findOne(id) {
         const section = await this.prisma.section.findUnique({
             where: { id },
+            include: {
+                translations: true,
+            },
         });
         if (!section) {
             throw new common_1.NotFoundException(`Section with ID ${id} not found`);
@@ -35,17 +58,41 @@ let SectionsService = class SectionsService {
     }
     async update(id, updateSectionDto) {
         const section = await this.findOne(id);
+        const { translations, ...sectionData } = updateSectionDto;
         return this.prisma.section.update({
             where: { id: section.id },
-            data: updateSectionDto,
+            data: {
+                ...sectionData,
+                translations: translations
+                    ? {
+                        upsert: translations.map((translation) => ({
+                            where: {
+                                id: translation.id,
+                            },
+                            update: {
+                                title: translation.title,
+                                description: translation.description,
+                            },
+                            create: {
+                                languageId: translation.languageId,
+                                title: translation.title,
+                                description: translation.description,
+                            },
+                        })),
+                    }
+                    : undefined,
+            },
         });
     }
     async remove(id) {
         const section = await this.findOne(id);
-        this.prisma.section.delete({
+        await this.prisma.sectionTranslation.deleteMany({
+            where: { sectionId: section.id },
+        });
+        await this.prisma.section.delete({
             where: { id: section.id },
         });
-        return `Section with ID ${id} delete`;
+        return `Section with ID ${id} deleted`;
     }
 };
 exports.SectionsService = SectionsService;

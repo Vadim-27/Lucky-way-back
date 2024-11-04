@@ -10,6 +10,7 @@ import { ImagesModule } from './modules/images/images.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { PostTranslationModule } from './modules/translation/translation.module';
 import { SectionsModule } from './modules/sections/sections.module';
+import { SectionTranslationModule } from './modules/section-translation/section-translation.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SectionsModule } from './modules/sections/sections.module';
     PostsModule,
     PostTranslationModule,
     SectionsModule,
+    SectionTranslationModule,
     UsersModule,
   ],
   controllers: [AppController],

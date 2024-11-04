@@ -11,20 +11,35 @@ generator client {
 }
 
 model Section {
-  id          Int    @id @default(autoincrement())
-  name        String
-  description String?
-  posts       Post[]
+  id            Int                  @id @default(autoincrement())
+  name          String
+  description   String?
+  translations  SectionTranslation[] // Визначаємо зв'язок з SectionTranslation
+  posts         Post[]               // Додаємо зв'язок з Post
 }
 
+model SectionTranslation {
+  id          Int      @id @default(autoincrement())
+  sectionId   Int
+  languageId  Int
+  title       String
+  description String?
+  
+  section     Section  @relation(fields: [sectionId], references: [id]) // Зв'язок з Section
+  language    Language @relation(fields: [languageId], references: [id]) // Зв'язок з Language
+
+  @@unique([sectionId, languageId]) // Складений унікальний індекс
+}
+
+
 model Post {
-  id           Int               @id @default(autoincrement())
-  country_id   Int?
-  section_id   Int?
-  translations PostTranslation[]
-  images       Image[]
-  country      Country?          @relation(fields: [country_id], references: [id])
-  section      Section?          @relation(fields: [section_id], references: [id]) // Додаємо зв'язок з Section
+  id               Int               @id @default(autoincrement())
+  country_id       Int?
+  section_id       Int?
+  translations     PostTranslation[]
+  images           Image[]
+  country          Country?          @relation(fields: [country_id], references: [id])
+  section          Section?          @relation(fields: [section_id], references: [id]) // Зв'язок з Section
 }
 
 model PostTranslation {
@@ -35,6 +50,14 @@ model PostTranslation {
   description String
   post        Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
   language    Language @relation(fields: [language_id], references: [id]) // Зв'язок з Language
+}
+
+model Language {
+  id                Int                  @id @default(autoincrement())
+  code              String               @unique // Наприклад, "en", "fr", "de"
+  name              String
+  postTranslations  PostTranslation[]
+  sectionTranslations SectionTranslation[] // Додаємо зворотне відношення до SectionTranslation
 }
 
 model User {
@@ -161,12 +184,6 @@ model VingetteOption {
   toll_road_id    Int // Зовнішній ключ для зв'язку з TollRoad
 }
 
-model Language {
-  id       Int               @id @default(autoincrement())
-  code     String            @unique // Наприклад, "en", "fr", "de"
-  name     String
-  sections PostTranslation[]
-}
 
 // Додаємо новий тип enum для ролей користувачів
 enum Role {
