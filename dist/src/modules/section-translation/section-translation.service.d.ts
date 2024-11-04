@@ -4,31 +4,31 @@ export declare class SectionTranslationService {
     private readonly prisma;
     constructor(prisma: PrismaService);
     create(data: CreateSectionTranslationDto): Promise<{
-        languageId: number;
-        title: string;
-        description: string | null;
         id: number;
+        description: string | null;
+        title: string;
+        languageId: number;
         sectionId: number;
     }>;
     findAll(): Promise<{
-        languageId: number;
-        title: string;
-        description: string | null;
         id: number;
+        description: string | null;
+        title: string;
+        languageId: number;
         sectionId: number;
     }[]>;
     findOne(id: number): Promise<{
-        languageId: number;
-        title: string;
-        description: string | null;
         id: number;
+        description: string | null;
+        title: string;
+        languageId: number;
         sectionId: number;
     }>;
     update(id: number, data: UpdateSectionTranslationDto): Promise<{
-        languageId: number;
-        title: string;
-        description: string | null;
         id: number;
+        description: string | null;
+        title: string;
+        languageId: number;
         sectionId: number;
     }>;
     remove(id: number): Promise<string>;
