@@ -88,6 +88,14 @@ export class SectionsService {
     const { translations, ...sectionData } = updateSectionDto;
 
     try {
+      // Перевіряємо, чи потрібно видалити всі translations
+      if (translations !== undefined && translations.length === 0) {
+        await this.prisma.sectionTranslation.deleteMany({
+          where: { sectionId: section.id }, // Видаляємо всі переклади для цієї секції
+        });
+      }
+
+      // Оновлюємо саму секцію
       return await this.prisma.section.update({
         where: { id: section.id },
         data: {

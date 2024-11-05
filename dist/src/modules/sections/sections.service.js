@@ -71,6 +71,11 @@ let SectionsService = class SectionsService {
         const section = await this.findOne(id);
         const { translations, ...sectionData } = updateSectionDto;
         try {
+            if (translations !== undefined && translations.length === 0) {
+                await this.prisma.sectionTranslation.deleteMany({
+                    where: { sectionId: section.id },
+                });
+            }
             return await this.prisma.section.update({
                 where: { id: section.id },
                 data: {
