@@ -18,4 +18,9 @@ export class UpdateLanguageDto implements Partial<Language> {
   @IsOptional()
   @IsString()
   name?: string; // Назва мови
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  label?: string;
 }

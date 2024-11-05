@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { Language } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger'; // Імпортуємо ApiProperty
 
@@ -10,4 +10,8 @@ export class CreateLanguageDto implements Omit<Language, 'id'> {
   @ApiProperty({ description: 'Назва мови' }) // Опис для поля name
   @IsString()
   name: string; // Назва мови
+
+  @ApiProperty()
+  @IsString()
+  label: string;
 }

@@ -12,14 +12,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LanguagesService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../../prisma/prisma.service");
+const library_1 = require("@prisma/client/runtime/library");
 let LanguagesService = class LanguagesService {
     constructor(prisma) {
         this.prisma = prisma;
     }
     async create(createLanguageDto) {
-        return this.prisma.language.create({
-            data: createLanguageDto,
-        });
+        try {
+            return await this.prisma.language.create({
+                data: createLanguageDto,
+            });
+        }
+        catch (error) {
+            if (error instanceof library_1.PrismaClientKnownRequestError) {
+                if (error.code === 'P2002') {
+                    const targetField = error.meta?.target || 'уникальное поле';
+                    throw new common_1.ConflictException(`Унікальність порушено: поле "${targetField}" повинно бути унікальним.`);
+                }
+            }
+            throw new common_1.HttpException('Не вдалося створити запис через невідому помилку', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     async findAll() {
         return this.prisma.language.findMany();

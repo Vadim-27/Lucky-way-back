@@ -55,6 +55,7 @@ model PostTranslation {
 model Language {
   id                Int                  @id @default(autoincrement())
   code              String               @unique // Наприклад, "en", "fr", "de"
+  label             String
   name              String
   postTranslations  PostTranslation[]
   sectionTranslations SectionTranslation[] // Додаємо зворотне відношення до SectionTranslation
