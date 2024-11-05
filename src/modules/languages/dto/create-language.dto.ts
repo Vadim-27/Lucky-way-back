@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { Language } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger'; // Імпортуємо ApiProperty
 

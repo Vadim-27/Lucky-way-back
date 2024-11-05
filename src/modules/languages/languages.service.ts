@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateLanguageDto } from './dto/create-language.dto';
 import { UpdateLanguageDto } from './dto/update-language.dto';
-import { Language, Prisma } from '@prisma/client'; // Імпортуємо тип Language
+import { Language } from '@prisma/client'; // Імпортуємо тип Language
 import { PrismaService } from '../../../prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 

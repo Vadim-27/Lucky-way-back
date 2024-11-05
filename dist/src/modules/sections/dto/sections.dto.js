@@ -21,20 +21,12 @@ __decorate([
     __metadata("design:type", String)
 ], BaseSectionDto.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ required: false }),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], BaseSectionDto.prototype, "description", void 0);
-__decorate([
     (0, swagger_1.ApiProperty)({
         type: [section_translation_dto_1.BaseSectionTranslationDto],
     }),
     __metadata("design:type", Array)
 ], BaseSectionDto.prototype, "translations", void 0);
-class CreateSectionDto extends (0, swagger_1.PickType)(BaseSectionDto, [
-    'name',
-    'description',
-]) {
+class CreateSectionDto extends (0, swagger_1.PickType)(BaseSectionDto, ['name']) {
 }
 exports.CreateSectionDto = CreateSectionDto;
 __decorate([
@@ -55,11 +47,6 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateSectionDto.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ required: false }),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], UpdateSectionDto.prototype, "description", void 0);
-__decorate([
     (0, swagger_1.ApiProperty)({
         type: [section_translation_dto_1.UpdateSectionTranslationDto],
         required: false,
@@ -78,10 +65,6 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ResponseSectionDto.prototype, "name", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ required: false }),
-    __metadata("design:type", String)
-], ResponseSectionDto.prototype, "description", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Array)

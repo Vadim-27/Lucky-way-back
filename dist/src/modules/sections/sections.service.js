@@ -23,7 +23,6 @@ let SectionsService = class SectionsService {
             return await this.prisma.section.create({
                 data: {
                     name: createSectionDto.name,
-                    description: createSectionDto.description,
                     translations: {
                         create: createSectionDto.translations?.map((translation) => ({
                             languageId: translation.languageId,

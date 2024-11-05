@@ -13,20 +13,13 @@ export class BaseSectionDto implements Partial<Omit<Section, 'id'>> {
   @ApiProperty()
   name: string;
 
-  @ApiProperty({ required: false })
-  @IsOptional()
-  description?: string;
-
   @ApiProperty({
     type: [BaseSectionTranslationDto],
   })
   translations: SectionTranslation[];
 }
 
-export class CreateSectionDto extends PickType(BaseSectionDto, [
-  'name',
-  'description',
-]) {
+export class CreateSectionDto extends PickType(BaseSectionDto, ['name']) {
   @ApiProperty({
     type: [CreateSectionTranslationDtoForSection],
     required: false,
@@ -41,9 +34,7 @@ export class UpdateSectionDto {
   @IsOptional()
   @ApiProperty({ required: false })
   name?: string;
-  @ApiProperty({ required: false })
-  @IsOptional()
-  description?: string;
+
   @ApiProperty({
     type: [UpdateSectionTranslationDto],
     required: false,
@@ -59,9 +50,6 @@ export class ResponseSectionDto {
 
   @ApiProperty()
   name: string;
-
-  @ApiProperty({ required: false })
-  description?: string;
 
   @ApiProperty()
   translations?: SectionTranslation[]; // Включаємо переклади в DTO відповіді
