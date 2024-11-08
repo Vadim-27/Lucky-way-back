@@ -7,7 +7,11 @@ import {
 } from '@nestjs/common'; // Імплементуємо NotFoundException
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Section, Prisma } from '@prisma/client';
-import { CreateSectionDto, UpdateSectionDto } from './dto/sections.dto';
+import {
+  CreateSectionDto,
+  ResponseSectionDto,
+  UpdateSectionDto,
+} from './dto/sections.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { UpdateSectionTranslationDtoForSection } from '../section-translation/dto/section-translation.dto';
 
@@ -81,7 +85,7 @@ export class SectionsService {
   async update(
     id: number,
     updateSectionDto: UpdateSectionDto,
-  ): Promise<Section> {
+  ): Promise<ResponseSectionDto> {
     const section = await this.findOne(id); // Перевіряємо наявність секції
 
     const { translations, ...sectionData } = updateSectionDto;
@@ -124,6 +128,9 @@ export class SectionsService {
                 ),
               }
             : undefined, // Якщо translations відсутнє або порожнє, пропускаємо це поле
+        },
+        include: {
+          translations: true, // Включаємо переклади у відповідь
         },
       });
     } catch (error) {

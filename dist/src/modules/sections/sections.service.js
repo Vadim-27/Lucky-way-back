@@ -103,6 +103,9 @@ let SectionsService = class SectionsService {
                         }
                         : undefined,
                 },
+                include: {
+                    translations: true,
+                },
             });
         }
         catch (error) {
