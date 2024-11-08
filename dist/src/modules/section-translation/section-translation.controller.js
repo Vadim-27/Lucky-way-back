@@ -30,8 +30,8 @@ let SectionTranslationController = class SectionTranslationController {
     async findOne(id) {
         return this.sectionTranslationService.findOne(+id);
     }
-    async update(id, updateSectionTranslationDto) {
-        return this.sectionTranslationService.update(+id, updateSectionTranslationDto);
+    async update(updateSectionTranslationDto) {
+        return this.sectionTranslationService.update(updateSectionTranslationDto);
     }
     async remove(id) {
         return this.sectionTranslationService.remove(+id);
@@ -76,7 +76,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SectionTranslationController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
+    (0, common_1.Patch)('update'),
     (0, swagger_1.ApiOperation)({ summary: 'Update a section translation by ID' }),
     (0, swagger_1.ApiResponse)({
         status: 200,
@@ -84,10 +84,9 @@ __decorate([
     }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Translation not found.' }),
     (0, swagger_1.ApiResponse)({ status: 400, description: 'Invalid data.' }),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, section_translation_dto_1.UpdateSectionTranslationDto]),
+    __metadata("design:paramtypes", [section_translation_dto_1.UpdateSectionTranslationDto]),
     __metadata("design:returntype", Promise)
 ], SectionTranslationController.prototype, "update", null);
 __decorate([

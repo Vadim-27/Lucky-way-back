@@ -17,6 +17,14 @@ let SectionTranslationService = class SectionTranslationService {
         this.prisma = prisma;
     }
     async create(data) {
+        if (data.languageId) {
+            const lang = this.prisma.language.findUnique({
+                where: { id: data.languageId },
+            });
+            if (!lang) {
+                throw new common_1.HttpException('languageId not found', common_1.HttpStatus.NOT_FOUND);
+            }
+        }
         return this.prisma.sectionTranslation.create({ data });
     }
     async findAll() {
@@ -31,9 +39,9 @@ let SectionTranslationService = class SectionTranslationService {
         }
         return sectionTranslation;
     }
-    async update(id, data) {
+    async update(data) {
         return this.prisma.sectionTranslation.update({
-            where: { id },
+            where: { id: data.id },
             data,
         });
     }

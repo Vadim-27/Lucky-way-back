@@ -61,7 +61,7 @@ export class SectionTranslationController {
   }
 
   // Endpoint для оновлення перекладу за ID
-  @Patch(':id')
+  @Patch('update')
   @ApiOperation({ summary: 'Update a section translation by ID' })
   @ApiResponse({
     status: 200,
@@ -70,13 +70,9 @@ export class SectionTranslationController {
   @ApiResponse({ status: 404, description: 'Translation not found.' })
   @ApiResponse({ status: 400, description: 'Invalid data.' })
   async update(
-    @Param('id') id: string,
     @Body() updateSectionTranslationDto: UpdateSectionTranslationDto,
   ) {
-    return this.sectionTranslationService.update(
-      +id,
-      updateSectionTranslationDto,
-    );
+    return this.sectionTranslationService.update(updateSectionTranslationDto);
   }
 
   // Endpoint для видалення перекладу за ID

@@ -75,40 +75,48 @@ let SectionsService = class SectionsService {
                     where: { sectionId: section.id },
                 });
             }
+            translations?.forEach((translation) => {
+                if (!translation.id) {
+                    throw new common_1.HttpException('translation.id is required', common_1.HttpStatus.BAD_REQUEST);
+                }
+            });
+            const validTranslations = translations?.filter((translation) => translation.id !== undefined);
+            const updateData = {
+                name: sectionData.name ? sectionData.name : section.name,
+            };
+            if (validTranslations && validTranslations.length > 0) {
+                updateData.translations = {
+                    upsert: validTranslations.map((translation) => {
+                        const updateTranslationData = {};
+                        if (translation.title !== undefined) {
+                            updateTranslationData.title = translation.title;
+                        }
+                        if (translation.description !== undefined) {
+                            updateTranslationData.description = translation.description;
+                        }
+                        if (translation.languageId !== undefined) {
+                            updateTranslationData.languageId = translation.languageId;
+                        }
+                        return {
+                            where: { id: translation.id },
+                            update: updateTranslationData,
+                            create: {
+                                languageId: translation.languageId ?? 1,
+                                title: translation.title ?? '',
+                                description: translation.description ?? '',
+                            },
+                        };
+                    }),
+                };
+            }
             return await this.prisma.section.update({
                 where: { id: section.id },
-                data: {
-                    ...sectionData,
-                    translations: translations?.length
-                        ? {
-                            upsert: translations.map((translation) => ({
-                                where: translation.id
-                                    ? { id: translation.id }
-                                    : {
-                                        sectionId_languageId: {
-                                            sectionId: section.id,
-                                            languageId: translation.languageId,
-                                        },
-                                    },
-                                update: {
-                                    title: translation.title,
-                                    description: translation.description,
-                                },
-                                create: {
-                                    languageId: translation.languageId,
-                                    title: translation.title,
-                                    description: translation.description,
-                                },
-                            })),
-                        }
-                        : undefined,
-                },
-                include: {
-                    translations: true,
-                },
+                data: updateData,
+                include: { translations: true },
             });
         }
         catch (error) {
+            console.error(error);
             if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
                 if (error.code === 'P2025') {
                     throw new common_1.NotFoundException(`Section with ID ${id} not found.`);
@@ -116,6 +124,9 @@ let SectionsService = class SectionsService {
                 if (error.code === 'P2002') {
                     throw new common_1.HttpException('Unique constraint failed on a field. Please ensure unique values.', common_1.HttpStatus.CONFLICT);
                 }
+            }
+            if (error instanceof common_1.HttpException) {
+                throw error;
             }
             throw new common_1.HttpException('Failed to update section', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }

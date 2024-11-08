@@ -13,7 +13,7 @@ import {
   UpdateSectionDto,
 } from './dto/sections.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { UpdateSectionTranslationDtoForSection } from '../section-translation/dto/section-translation.dto';
+import { UpdateSectionTranslationDto } from '../section-translation/dto/section-translation.dto';
 
 @Injectable()
 export class SectionsService {
@@ -86,54 +86,76 @@ export class SectionsService {
     id: number,
     updateSectionDto: UpdateSectionDto,
   ): Promise<ResponseSectionDto> {
-    const section = await this.findOne(id); // Перевіряємо наявність секції
+    const section = await this.findOne(id);
 
     const { translations, ...sectionData } = updateSectionDto;
 
     try {
-      // Перевіряємо, чи потрібно видалити всі translations
+      // Якщо translations передані та є порожнім масивом, видаляємо всі переклади
       if (translations !== undefined && translations.length === 0) {
         await this.prisma.sectionTranslation.deleteMany({
-          where: { sectionId: section.id }, // Видаляємо всі переклади для цієї секції
+          where: { sectionId: section.id },
         });
       }
 
-      // Оновлюємо саму секцію
+      // Перевіряємо кожен елемент translations, щоб переконатись, що всі мають id
+      translations?.forEach((translation) => {
+        if (!translation.id) {
+          throw new HttpException(
+            'translation.id is required',
+            HttpStatus.BAD_REQUEST, // Статус 400 для помилки валідації
+          );
+        }
+      });
+
+      // Перевіряємо, чи є хоча б одне перекладене значення для оновлення
+      const validTranslations = translations?.filter(
+        (translation) => translation.id !== undefined,
+      );
+
+      // Виконуємо оновлення тільки якщо translations не пусте або не відсутнє
+      const updateData: any = {
+        name: sectionData.name ? sectionData.name : section.name, // Оновлюємо поле name, якщо воно змінилося
+      };
+
+      if (validTranslations && validTranslations.length > 0) {
+        updateData.translations = {
+          upsert: validTranslations.map(
+            (translation: UpdateSectionTranslationDto) => {
+              const updateTranslationData: any = {};
+
+              if (translation.title !== undefined) {
+                updateTranslationData.title = translation.title;
+              }
+              if (translation.description !== undefined) {
+                updateTranslationData.description = translation.description;
+              }
+              if (translation.languageId !== undefined) {
+                updateTranslationData.languageId = translation.languageId;
+              }
+
+              return {
+                where: { id: translation.id }, // Оновлюємо через id
+                update: updateTranslationData,
+                create: {
+                  languageId: translation.languageId ?? 1,
+                  title: translation.title ?? '',
+                  description: translation.description ?? '',
+                },
+              };
+            },
+          ),
+        };
+      }
+
       return await this.prisma.section.update({
         where: { id: section.id },
-        data: {
-          ...sectionData,
-          translations: translations?.length // Перевірка, чи є елементи в масиві translations
-            ? {
-                upsert: translations.map(
-                  (translation: UpdateSectionTranslationDtoForSection) => ({
-                    where: translation.id
-                      ? { id: translation.id }
-                      : {
-                          sectionId_languageId: {
-                            sectionId: section.id,
-                            languageId: translation.languageId,
-                          },
-                        },
-                    update: {
-                      title: translation.title,
-                      description: translation.description,
-                    },
-                    create: {
-                      languageId: translation.languageId,
-                      title: translation.title,
-                      description: translation.description,
-                    },
-                  }),
-                ),
-              }
-            : undefined, // Якщо translations відсутнє або порожнє, пропускаємо це поле
-        },
-        include: {
-          translations: true, // Включаємо переклади у відповідь
-        },
+        data: updateData, // Оновлюємо тільки те, що передано
+        include: { translations: true },
       });
     } catch (error) {
+      console.error(error);
+
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
           throw new NotFoundException(`Section with ID ${id} not found.`);
@@ -145,6 +167,13 @@ export class SectionsService {
           );
         }
       }
+
+      // Якщо помилка не з Prisma, повертаємо її як HttpException
+      if (error instanceof HttpException) {
+        throw error; // Прокидаємо вже підготовлену помилку
+      }
+
+      // Якщо сталася невідома помилка, повертаємо внутрішню помилку 500
       throw new HttpException(
         'Failed to update section',
         HttpStatus.INTERNAL_SERVER_ERROR,

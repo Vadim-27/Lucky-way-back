@@ -1,5 +1,10 @@
 // section-translation.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import {
   CreateSectionTranslationDto,
   UpdateSectionTranslationDto,
@@ -12,6 +17,14 @@ export class SectionTranslationService {
 
   // Створення нового перекладу для Section
   async create(data: CreateSectionTranslationDto) {
+    if (data.languageId) {
+      const lang = this.prisma.language.findUnique({
+        where: { id: data.languageId },
+      });
+      if (!lang) {
+        throw new HttpException('languageId not found', HttpStatus.NOT_FOUND);
+      }
+    }
     return this.prisma.sectionTranslation.create({ data });
   }
 
@@ -32,9 +45,9 @@ export class SectionTranslationService {
   }
 
   // Оновлення перекладу за ID
-  async update(id: number, data: UpdateSectionTranslationDto) {
+  async update(data: UpdateSectionTranslationDto) {
     return this.prisma.sectionTranslation.update({
-      where: { id },
+      where: { id: data.id },
       data,
     });
   }

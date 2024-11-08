@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateSectionTranslationDtoForSection = exports.CreateSectionTranslationDto = exports.UpdateSectionTranslationDto = exports.UpdateSectionTranslationDtoForSection = exports.BaseSectionTranslationDto = void 0;
+exports.CreateSectionTranslationDtoForSection = exports.CreateSectionTranslationDto = exports.UpdateSectionTranslationDto = exports.BaseSectionTranslationDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class BaseSectionTranslationDto {
@@ -40,12 +40,32 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], BaseSectionTranslationDto.prototype, "description", void 0);
-class UpdateSectionTranslationDtoForSection extends (0, swagger_1.PickType)(BaseSectionTranslationDto, ['languageId', 'title', 'description', 'id']) {
-}
-exports.UpdateSectionTranslationDtoForSection = UpdateSectionTranslationDtoForSection;
-class UpdateSectionTranslationDto extends (0, swagger_1.PickType)(BaseSectionTranslationDto, ['languageId', 'title', 'description']) {
+class UpdateSectionTranslationDto {
 }
 exports.UpdateSectionTranslationDto = UpdateSectionTranslationDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: true }),
+    (0, class_validator_1.IsInt)(),
+    __metadata("design:type", Number)
+], UpdateSectionTranslationDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    __metadata("design:type", Number)
+], UpdateSectionTranslationDto.prototype, "languageId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: false }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateSectionTranslationDto.prototype, "title", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: false }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateSectionTranslationDto.prototype, "description", void 0);
 class CreateSectionTranslationDto extends (0, swagger_1.PickType)(BaseSectionTranslationDto, ['languageId', 'title', 'description', 'sectionId']) {
 }
 exports.CreateSectionTranslationDto = CreateSectionTranslationDto;

@@ -1,6 +1,6 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { SectionTranslation } from '@prisma/client';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class BaseSectionTranslationDto
   implements Omit<SectionTranslation, 'id'>
@@ -22,15 +22,24 @@ export class BaseSectionTranslationDto
   description: string;
 }
 
-export class UpdateSectionTranslationDtoForSection extends PickType(
-  BaseSectionTranslationDto,
-  ['languageId', 'title', 'description', 'id'],
-) {}
+export class UpdateSectionTranslationDto {
+  @ApiProperty({ required: true })
+  @IsInt()
+  id: number;
 
-export class UpdateSectionTranslationDto extends PickType(
-  BaseSectionTranslationDto,
-  ['languageId', 'title', 'description'],
-) {}
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsInt()
+  languageId?: number;
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  title?: string;
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  description?: string;
+}
 
 export class CreateSectionTranslationDto extends PickType(
   BaseSectionTranslationDto,
