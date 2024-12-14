@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CountryDto = exports.TranslationsDto = exports.TimezoneDto = void 0;
+exports.UpdateCountryDto = exports.CountryDto = exports.TranslationsDto = exports.TimezoneDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 class TimezoneDto {
 }
@@ -208,4 +208,11 @@ __decorate([
     (0, swagger_1.ApiProperty)({ description: 'Чи є платні дороги' }),
     __metadata("design:type", Boolean)
 ], CountryDto.prototype, "has_toll_roads", void 0);
+class UpdateCountryDto {
+}
+exports.UpdateCountryDto = UpdateCountryDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Чи є платні дороги' }),
+    __metadata("design:type", Boolean)
+], UpdateCountryDto.prototype, "has_toll_roads", void 0);
 //# sourceMappingURL=countries.dto.js.map

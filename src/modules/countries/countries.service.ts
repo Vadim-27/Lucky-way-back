@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Country } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
 import axios from 'axios';
+import { UpdateCountryDto } from './dto/countries.dto';
 
 @Injectable()
 export class CountriesService {
@@ -48,7 +49,7 @@ export class CountriesService {
         has_toll_roads: false,
       }));
 
-      console.log('Країни для створення:', countries);
+      //console.log('Країни для створення:', countries);
 
       const result = await this.prisma.country.createMany({
         data: countries,
@@ -62,12 +63,37 @@ export class CountriesService {
   }
 
   async getAllCountries(): Promise<Country[]> {
-    return this.prisma.country.findMany();
+    return this.prisma.country.findMany({
+      include: {
+        toll_roads: true, // Включаємо платні дороги
+        vingettes: true,
+      },
+    });
   }
 
   async getCountryById(id: number): Promise<Country | null> {
     return this.prisma.country.findUnique({
       where: { id },
+      include: {
+        toll_roads: true, // Включаємо платні дороги
+        vingettes: true,
+      },
     });
+  }
+
+  async updateCountry(
+    id: number,
+    updateData: UpdateCountryDto,
+  ): Promise<Country | null> {
+    try {
+      const updatedCountry = await this.prisma.country.update({
+        where: { id },
+        data: updateData,
+      });
+      return updatedCountry;
+    } catch (error) {
+      console.error('Error updating country:', error);
+      throw error;
+    }
   }
 }

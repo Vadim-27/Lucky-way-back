@@ -20,6 +20,9 @@ const posts_module_1 = require("./modules/posts/posts.module");
 const translation_module_1 = require("./modules/translation/translation.module");
 const sections_module_1 = require("./modules/sections/sections.module");
 const section_translation_module_1 = require("./modules/section-translation/section-translation.module");
+const toll_road_module_1 = require("./modules/toll-road/toll-road.module");
+const vehicle_type_module_1 = require("./modules/vehicle-type/vehicle-type.module");
+const vingette_module_1 = require("./modules/vingette/vingette.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -38,6 +41,9 @@ exports.AppModule = AppModule = __decorate([
             sections_module_1.SectionsModule,
             section_translation_module_1.SectionTranslationModule,
             users_module_1.UsersModule,
+            toll_road_module_1.TollRoadModule,
+            vehicle_type_module_1.VehicleTypeModule,
+            vingette_module_1.VingetteModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

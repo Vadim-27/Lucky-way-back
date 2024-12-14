@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { Country } from '@prisma/client';
 import {
   ApiTags,
@@ -8,6 +8,7 @@ import {
   ApiExcludeEndpoint,
 } from '@nestjs/swagger';
 import { CountriesService } from './countries.service';
+import { UpdateCountryDto } from './dto/countries.dto';
 
 @ApiTags('countries') // Тег для групування ендпоінтів
 @Controller('countries')
@@ -43,5 +44,24 @@ export class CountriesController {
   async syncCountries() {
     await this.countriesService.saveCountries();
     return { message: 'Країни успішно синхронізовані!' };
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Оновити країну за ID' })
+  @ApiResponse({ status: 200, description: 'Країну успішно оновлено.' })
+  @ApiResponse({ status: 400, description: 'Некоректні дані для оновлення.' })
+  @ApiResponse({ status: 404, description: 'Країна не знайдена.' })
+  async updateCountry(
+    @Param('id') id: number,
+    @Body() updateData: UpdateCountryDto,
+  ) {
+    const updatedCountry = await this.countriesService.updateCountry(
+      id,
+      updateData,
+    );
+    return {
+      message: 'Країну успішно оновлено!',
+      updatedCountry,
+    };
   }
 }

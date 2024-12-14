@@ -146,3 +146,8 @@ export class CountryDto {
   @ApiProperty({ description: 'Чи є платні дороги' })
   has_toll_roads: boolean;
 }
+
+export class UpdateCountryDto {
+  @ApiProperty({ description: 'Чи є платні дороги' })
+  has_toll_roads: boolean;
+}

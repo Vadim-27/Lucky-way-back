@@ -51,3 +51,6 @@ export declare class CountryDto {
     geoData: any;
     has_toll_roads: boolean;
 }
+export declare class UpdateCountryDto {
+    has_toll_roads: boolean;
+}

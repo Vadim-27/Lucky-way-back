@@ -52,7 +52,6 @@ let CountriesService = class CountriesService {
                 geoData: null,
                 has_toll_roads: false,
             }));
-            console.log('Країни для створення:', countries);
             const result = await this.prisma.country.createMany({
                 data: countries,
                 skipDuplicates: true,
@@ -64,12 +63,34 @@ let CountriesService = class CountriesService {
         }
     }
     async getAllCountries() {
-        return this.prisma.country.findMany();
+        return this.prisma.country.findMany({
+            include: {
+                toll_roads: true,
+                vingettes: true,
+            },
+        });
     }
     async getCountryById(id) {
         return this.prisma.country.findUnique({
             where: { id },
+            include: {
+                toll_roads: true,
+                vingettes: true,
+            },
         });
+    }
+    async updateCountry(id, updateData) {
+        try {
+            const updatedCountry = await this.prisma.country.update({
+                where: { id },
+                data: updateData,
+            });
+            return updatedCountry;
+        }
+        catch (error) {
+            console.error('Error updating country:', error);
+            throw error;
+        }
     }
 };
 exports.CountriesService = CountriesService;
