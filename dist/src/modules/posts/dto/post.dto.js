@@ -69,6 +69,16 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], UpdatePostDto.prototype, "section_id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        type: [translation_dto_1.CreatePostTranslationDto],
+        required: false,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    __metadata("design:type", Array)
+], UpdatePostDto.prototype, "translations", void 0);
 class PostResponse {
 }
 exports.PostResponse = PostResponse;

@@ -44,7 +44,10 @@ model PostTranslation {
   description String
   language    Language @relation(fields: [language_id], references: [id])
   post        Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@unique([post_id, language_id])  // Додаємо складений унікальний ключ
 }
+
 
 model Language {
   id                  Int                  @id @default(autoincrement())

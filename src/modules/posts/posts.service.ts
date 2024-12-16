@@ -130,53 +130,77 @@ export class PostService {
   }
 
   /* translation, images змінється кожне окремо через їхні методі update by id */
-  async update(id: number, updatePostDto: UpdatePostDto) {
-    // Перевіряємо, чи існує пост
-    const post = await this.findOne(id);
+ async update(id: number, updatePostDto: UpdatePostDto) {
+  // Перевіряємо, чи існує пост
+  const post = await this.findOne(id);
 
-    if (!post) {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
-    }
+  if (!post) {
+    throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+  }
 
-    // Оновлюємо поле `country_id` у `post` та пов’язаних `images`, якщо `country_id` передано і змінилось
-    if (
-      updatePostDto.country_id &&
-      updatePostDto.country_id !== post.country_id
-    ) {
-      // Оновлюємо `country_id` в основному записі `post`
-      await this.prisma.post.update({
-        where: { id },
-        data: { country_id: updatePostDto.country_id },
-      });
+  const { translations, country_id, section_id } = updatePostDto;
 
-      // Оновлюємо `country_id` у всіх `images`, які належать до цього посту
+  try {
+    // Оновлення основних полів (country_id, section_id)
+    const updateData: any = {};
+
+    if (country_id && country_id !== post.country_id) {
+      updateData.country_id = country_id;
+
+      // Оновлюємо country_id у зображеннях
       await this.prisma.image.updateMany({
         where: { post_id: id },
-        data: { country_id: updatePostDto.country_id },
+        data: { country_id },
       });
     }
 
-    // Оновлюємо поле `section_id`, якщо передано
-    if (
-      updatePostDto.section_id &&
-      updatePostDto.section_id !== post.section_id
-    ) {
-      await this.prisma.post.update({
-        where: { id },
-        data: { section_id: updatePostDto.section_id },
-      });
+    if (section_id && section_id !== post.section_id) {
+      updateData.section_id = section_id;
     }
 
-    // Повертаємо оновлений пост із включенням `translations` та `images`
-    return this.prisma.post.findUnique({
+    // Логіка оновлення або створення перекладів
+    if (translations && translations.length > 0) {
+      updateData.translations = {
+        upsert: translations.map((translation) => ({
+          where: {
+            post_id_language_id: {
+              post_id: id,
+              language_id: translation.language_id,
+            },
+          },
+          update: {
+            title: translation.title ?? '',
+            description: translation.description ?? '',
+          },
+          create: {
+            //post_id: id,
+            language_id: translation.language_id,
+            title: translation.title ?? '',
+            description: translation.description ?? '',
+          },
+        })),
+      };
+    }
+
+    // Оновлюємо пост
+    return await this.prisma.post.update({
       where: { id },
+      data: updateData,
       include: {
         translations: true,
         images: true,
         country: true,
       },
     });
+  } catch (error) {
+    console.error(error);
+    throw new HttpException(
+      'Failed to update post',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
+}
+
 
   async remove(id: number) {
     // Перевіряємо, чи існує пост

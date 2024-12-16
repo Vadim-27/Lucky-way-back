@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SectionsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../../prisma/prisma.service");
-const client_1 = require("@prisma/client");
 const library_1 = require("@prisma/client/runtime/library");
 let SectionsService = class SectionsService {
     constructor(prisma) {
@@ -70,64 +69,60 @@ let SectionsService = class SectionsService {
         const section = await this.findOne(id);
         const { translations, ...sectionData } = updateSectionDto;
         try {
-            if (translations !== undefined && translations.length === 0) {
-                await this.prisma.sectionTranslation.deleteMany({
-                    where: { sectionId: section.id },
-                });
-            }
-            translations?.forEach((translation) => {
-                if (!translation.id) {
-                    throw new common_1.HttpException('translation.id is required', common_1.HttpStatus.BAD_REQUEST);
-                }
-            });
-            const validTranslations = translations?.filter((translation) => translation.id !== undefined);
             const updateData = {
-                name: sectionData.name ? sectionData.name : section.name,
+                name: sectionData.name ?? section.name,
             };
-            if (validTranslations && validTranslations.length > 0) {
+            if (translations && translations.length > 0) {
                 updateData.translations = {
-                    upsert: validTranslations.map((translation) => {
-                        const updateTranslationData = {};
-                        if (translation.title !== undefined) {
-                            updateTranslationData.title = translation.title;
-                        }
-                        if (translation.description !== undefined) {
-                            updateTranslationData.description = translation.description;
-                        }
-                        if (translation.languageId !== undefined) {
-                            updateTranslationData.languageId = translation.languageId;
-                        }
-                        return {
-                            where: { id: translation.id },
-                            update: updateTranslationData,
-                            create: {
-                                languageId: translation.languageId ?? 1,
-                                title: translation.title ?? '',
-                                description: translation.description ?? '',
+                    upsert: translations.map((translation) => ({
+                        where: {
+                            sectionId_languageId: {
+                                sectionId: id,
+                                languageId: translation.languageId,
                             },
-                        };
-                    }),
+                        },
+                        update: {
+                            title: translation.title,
+                            description: translation.description,
+                        },
+                        create: {
+                            sectionId: id,
+                            languageId: translation.languageId,
+                            title: translation.title ?? '',
+                            description: translation.description ?? '',
+                        },
+                    })),
                 };
             }
             return await this.prisma.section.update({
                 where: { id: section.id },
-                data: updateData,
+                data: {
+                    name: sectionData.name ?? section.name,
+                    translations: {
+                        upsert: translations.map((translation) => ({
+                            where: {
+                                sectionId_languageId: {
+                                    sectionId: section.id,
+                                    languageId: translation.languageId,
+                                },
+                            },
+                            update: {
+                                title: translation.title ?? '',
+                                description: translation.description ?? '',
+                            },
+                            create: {
+                                languageId: translation.languageId,
+                                title: translation.title ?? '',
+                                description: translation.description ?? '',
+                            },
+                        })),
+                    },
+                },
                 include: { translations: true },
             });
         }
         catch (error) {
             console.error(error);
-            if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
-                if (error.code === 'P2025') {
-                    throw new common_1.NotFoundException(`Section with ID ${id} not found.`);
-                }
-                if (error.code === 'P2002') {
-                    throw new common_1.HttpException('Unique constraint failed on a field. Please ensure unique values.', common_1.HttpStatus.CONFLICT);
-                }
-            }
-            if (error instanceof common_1.HttpException) {
-                throw error;
-            }
             throw new common_1.HttpException('Failed to update section', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -91,89 +91,61 @@ export class SectionsService {
     const { translations, ...sectionData } = updateSectionDto;
 
     try {
-      // Якщо translations передані та є порожнім масивом, видаляємо всі переклади
-      if (translations !== undefined && translations.length === 0) {
-        await this.prisma.sectionTranslation.deleteMany({
-          where: { sectionId: section.id },
-        });
-      }
-
-      // Перевіряємо кожен елемент translations, щоб переконатись, що всі мають id
-      translations?.forEach((translation) => {
-        if (!translation.id) {
-          throw new HttpException(
-            'translation.id is required',
-            HttpStatus.BAD_REQUEST, // Статус 400 для помилки валідації
-          );
-        }
-      });
-
-      // Перевіряємо, чи є хоча б одне перекладене значення для оновлення
-      const validTranslations = translations?.filter(
-        (translation) => translation.id !== undefined,
-      );
-
-      // Виконуємо оновлення тільки якщо translations не пусте або не відсутнє
       const updateData: any = {
-        name: sectionData.name ? sectionData.name : section.name, // Оновлюємо поле name, якщо воно змінилося
+        name: sectionData.name ?? section.name,
       };
 
-      if (validTranslations && validTranslations.length > 0) {
+      if (translations && translations.length > 0) {
         updateData.translations = {
-          upsert: validTranslations.map(
-            (translation: UpdateSectionTranslationDto) => {
-              const updateTranslationData: any = {};
-
-              if (translation.title !== undefined) {
-                updateTranslationData.title = translation.title;
-              }
-              if (translation.description !== undefined) {
-                updateTranslationData.description = translation.description;
-              }
-              if (translation.languageId !== undefined) {
-                updateTranslationData.languageId = translation.languageId;
-              }
-
-              return {
-                where: { id: translation.id }, // Оновлюємо через id
-                update: updateTranslationData,
-                create: {
-                  languageId: translation.languageId ?? 1,
-                  title: translation.title ?? '',
-                  description: translation.description ?? '',
-                },
-              };
+          upsert: translations.map((translation) => ({
+            where: {
+              sectionId_languageId: {
+                sectionId: id,
+                languageId: translation.languageId,
+              },
             },
-          ),
+            update: {
+              title: translation.title,
+              description: translation.description,
+            },
+            create: {
+              sectionId: id,
+              languageId: translation.languageId,
+              title: translation.title ?? '',
+              description: translation.description ?? '',
+            },
+          })),
         };
       }
 
       return await this.prisma.section.update({
         where: { id: section.id },
-        data: updateData, // Оновлюємо тільки те, що передано
-        include: { translations: true },
+        data: {
+          name: sectionData.name ?? section.name,
+          translations: {
+            upsert: translations.map((translation) => ({
+              where: {
+                sectionId_languageId: {
+                  sectionId: section.id,
+                  languageId: translation.languageId,
+                },
+              },
+              update: {
+                title: translation.title ?? '',
+                description: translation.description ?? '',
+              },
+              create: {
+                languageId: translation.languageId, // Не передавайте sectionId тут
+                title: translation.title ?? '',
+                description: translation.description ?? '',
+              },
+            })),
+          },
+        },
+        include: { translations: true }, // Включення перекладів
       });
     } catch (error) {
       console.error(error);
-
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(`Section with ID ${id} not found.`);
-        }
-        if (error.code === 'P2002') {
-          throw new HttpException(
-            'Unique constraint failed on a field. Please ensure unique values.',
-            HttpStatus.CONFLICT,
-          );
-        }
-      }
-
-      // Якщо помилка не з Prisma, повертаємо її як HttpException
-      if (error instanceof HttpException) {
-        throw error; // Прокидаємо вже підготовлену помилку
-      }
-
-      // Якщо сталася невідома помилка, повертаємо внутрішню помилку 500
       throw new HttpException(
         'Failed to update section',
         HttpStatus.INTERNAL_SERVER_ERROR,

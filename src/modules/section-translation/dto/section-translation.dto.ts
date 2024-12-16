@@ -23,23 +23,30 @@ export class BaseSectionTranslationDto
 }
 
 export class UpdateSectionTranslationDto {
-  @ApiProperty({ required: true })
-  @IsInt()
-  id: number;
-
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'The language ID for the translation.',
+    example: 1,
+  })
   @IsOptional()
-  @IsInt()
   languageId?: number;
-  @ApiProperty({ required: false })
-  @IsString()
+
+  @ApiProperty({
+    description: 'The title of the section in the specific language.',
+    example: 'My Section Title',
+  })
   @IsOptional()
   title?: string;
-  @ApiProperty({ required: false })
-  @IsString()
+
+  @ApiProperty({
+    description: 'A description for the section in the specific language.',
+    example: 'Description of the section in the selected language.',
+    required: false,
+  })
   @IsOptional()
   description?: string;
 }
+
+
 
 export class CreateSectionTranslationDto extends PickType(
   BaseSectionTranslationDto,

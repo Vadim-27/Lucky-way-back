@@ -30,13 +30,17 @@ export class CreateSectionDto extends PickType(BaseSectionDto, ['name']) {
 
 // DTO для оновлення Section з перекладами
 export class UpdateSectionDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The name of the section',
+    required: false,
+  })
   @IsOptional()
-  @ApiProperty({ required: false })
   name?: string;
 
   @ApiProperty({
     type: [UpdateSectionTranslationDto],
+    description:
+      'Translations to update or create. If a translation with the same languageId exists, it will be updated; otherwise, a new translation will be created.',
     required: false,
   })
   @IsOptional()

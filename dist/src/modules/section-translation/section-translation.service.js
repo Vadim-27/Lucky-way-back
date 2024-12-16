@@ -39,10 +39,22 @@ let SectionTranslationService = class SectionTranslationService {
         }
         return sectionTranslation;
     }
-    async update(data) {
-        return this.prisma.sectionTranslation.update({
-            where: { id: data.id },
-            data,
+    async update(sectionId, data) {
+        const { languageId, title, description } = data;
+        return await this.prisma.sectionTranslation.upsert({
+            where: {
+                sectionId_languageId: { sectionId, languageId },
+            },
+            update: {
+                title: title ?? undefined,
+                description: description ?? undefined,
+            },
+            create: {
+                sectionId,
+                languageId,
+                title: title ?? '',
+                description: description ?? '',
+            },
         });
     }
     async remove(id) {

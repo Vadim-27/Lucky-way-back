@@ -44,25 +44,27 @@ class UpdateSectionTranslationDto {
 }
 exports.UpdateSectionTranslationDto = UpdateSectionTranslationDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ required: true }),
-    (0, class_validator_1.IsInt)(),
-    __metadata("design:type", Number)
-], UpdateSectionTranslationDto.prototype, "id", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ required: false }),
+    (0, swagger_1.ApiProperty)({
+        description: 'The language ID for the translation.',
+        example: 1,
+    }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsInt)(),
     __metadata("design:type", Number)
 ], UpdateSectionTranslationDto.prototype, "languageId", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ required: false }),
-    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'The title of the section in the specific language.',
+        example: 'My Section Title',
+    }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateSectionTranslationDto.prototype, "title", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ required: false }),
-    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'A description for the section in the specific language.',
+        example: 'Description of the section in the selected language.',
+        required: false,
+    }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateSectionTranslationDto.prototype, "description", void 0);

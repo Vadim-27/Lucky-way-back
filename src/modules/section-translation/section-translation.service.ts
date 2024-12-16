@@ -44,11 +44,24 @@ export class SectionTranslationService {
     return sectionTranslation;
   }
 
-  // Оновлення перекладу за ID
-  async update(data: UpdateSectionTranslationDto) {
-    return this.prisma.sectionTranslation.update({
-      where: { id: data.id },
-      data,
+  // Оновлення перекладу за section ID
+  async update(sectionId: number, data: UpdateSectionTranslationDto) {
+    const { languageId, title, description } = data;
+
+    return await this.prisma.sectionTranslation.upsert({
+      where: {
+        sectionId_languageId: { sectionId, languageId },
+      },
+      update: {
+        title: title ?? undefined,
+        description: description ?? undefined,
+      },
+      create: {
+        sectionId,
+        languageId,
+        title: title ?? '',
+        description: description ?? '',
+      },
     });
   }
 

@@ -24,7 +24,7 @@ export declare class SectionTranslationController {
         languageId: number;
         sectionId: number;
     }>;
-    update(updateSectionTranslationDto: UpdateSectionTranslationDto): Promise<{
+    update(sectionId: number, updateSectionTranslationDto: UpdateSectionTranslationDto): Promise<{
         id: number;
         description: string | null;
         title: string;

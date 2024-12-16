@@ -57,7 +57,17 @@ export class UpdatePostDto {
   })
   @IsOptional()
   section_id?: number;
+
+  @ApiProperty({
+    type: [CreatePostTranslationDto],
+    required: false,
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  translations?: CreatePostTranslationDto[];
 }
+
 
 // Тип для відповіді
 export class PostResponse {

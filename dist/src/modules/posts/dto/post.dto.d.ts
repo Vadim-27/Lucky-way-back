@@ -10,6 +10,7 @@ export declare class CreatePostDto {
 export declare class UpdatePostDto {
     country_id?: number;
     section_id?: number;
+    translations?: CreatePostTranslationDto[];
 }
 export declare class PostResponse {
     id: number;

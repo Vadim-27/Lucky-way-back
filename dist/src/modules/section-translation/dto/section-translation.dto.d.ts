@@ -7,7 +7,6 @@ export declare class BaseSectionTranslationDto implements Omit<SectionTranslatio
     description: string;
 }
 export declare class UpdateSectionTranslationDto {
-    id: number;
     languageId?: number;
     title?: string;
     description?: string;

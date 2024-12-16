@@ -96,32 +96,54 @@ let PostService = class PostService {
         if (!post) {
             throw new common_1.HttpException('Post not found', common_1.HttpStatus.NOT_FOUND);
         }
-        if (updatePostDto.country_id &&
-            updatePostDto.country_id !== post.country_id) {
-            await this.prisma.post.update({
+        const { translations, country_id, section_id } = updatePostDto;
+        try {
+            const updateData = {};
+            if (country_id && country_id !== post.country_id) {
+                updateData.country_id = country_id;
+                await this.prisma.image.updateMany({
+                    where: { post_id: id },
+                    data: { country_id },
+                });
+            }
+            if (section_id && section_id !== post.section_id) {
+                updateData.section_id = section_id;
+            }
+            if (translations && translations.length > 0) {
+                updateData.translations = {
+                    upsert: translations.map((translation) => ({
+                        where: {
+                            post_id_language_id: {
+                                post_id: id,
+                                language_id: translation.language_id,
+                            },
+                        },
+                        update: {
+                            title: translation.title ?? '',
+                            description: translation.description ?? '',
+                        },
+                        create: {
+                            language_id: translation.language_id,
+                            title: translation.title ?? '',
+                            description: translation.description ?? '',
+                        },
+                    })),
+                };
+            }
+            return await this.prisma.post.update({
                 where: { id },
-                data: { country_id: updatePostDto.country_id },
-            });
-            await this.prisma.image.updateMany({
-                where: { post_id: id },
-                data: { country_id: updatePostDto.country_id },
+                data: updateData,
+                include: {
+                    translations: true,
+                    images: true,
+                    country: true,
+                },
             });
         }
-        if (updatePostDto.section_id &&
-            updatePostDto.section_id !== post.section_id) {
-            await this.prisma.post.update({
-                where: { id },
-                data: { section_id: updatePostDto.section_id },
-            });
+        catch (error) {
+            console.error(error);
+            throw new common_1.HttpException('Failed to update post', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return this.prisma.post.findUnique({
-            where: { id },
-            include: {
-                translations: true,
-                images: true,
-                country: true,
-            },
-        });
     }
     async remove(id) {
         await this.findOne(id);
