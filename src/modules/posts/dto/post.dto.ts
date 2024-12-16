@@ -68,7 +68,6 @@ export class UpdatePostDto {
   translations?: CreatePostTranslationDto[];
 }
 
-
 // Тип для відповіді
 export class PostResponse {
   @ApiProperty({

@@ -46,8 +46,6 @@ export class UpdateSectionTranslationDto {
   description?: string;
 }
 
-
-
 export class CreateSectionTranslationDto extends PickType(
   BaseSectionTranslationDto,
   ['languageId', 'title', 'description', 'sectionId'],

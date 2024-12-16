@@ -130,77 +130,76 @@ export class PostService {
   }
 
   /* translation, images змінється кожне окремо через їхні методі update by id */
- async update(id: number, updatePostDto: UpdatePostDto) {
-  // Перевіряємо, чи існує пост
-  const post = await this.findOne(id);
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    // Перевіряємо, чи існує пост
+    const post = await this.findOne(id);
 
-  if (!post) {
-    throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
-  }
-
-  const { translations, country_id, section_id } = updatePostDto;
-
-  try {
-    // Оновлення основних полів (country_id, section_id)
-    const updateData: any = {};
-
-    if (country_id && country_id !== post.country_id) {
-      updateData.country_id = country_id;
-
-      // Оновлюємо country_id у зображеннях
-      await this.prisma.image.updateMany({
-        where: { post_id: id },
-        data: { country_id },
-      });
+    if (!post) {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
 
-    if (section_id && section_id !== post.section_id) {
-      updateData.section_id = section_id;
-    }
+    const { translations, country_id, section_id } = updatePostDto;
 
-    // Логіка оновлення або створення перекладів
-    if (translations && translations.length > 0) {
-      updateData.translations = {
-        upsert: translations.map((translation) => ({
-          where: {
-            post_id_language_id: {
-              post_id: id,
-              language_id: translation.language_id,
+    try {
+      // Оновлення основних полів (country_id, section_id)
+      const updateData: any = {};
+
+      if (country_id && country_id !== post.country_id) {
+        updateData.country_id = country_id;
+
+        // Оновлюємо country_id у зображеннях
+        await this.prisma.image.updateMany({
+          where: { post_id: id },
+          data: { country_id },
+        });
+      }
+
+      if (section_id && section_id !== post.section_id) {
+        updateData.section_id = section_id;
+      }
+
+      // Логіка оновлення або створення перекладів
+      if (translations && translations.length > 0) {
+        updateData.translations = {
+          upsert: translations.map((translation) => ({
+            where: {
+              post_id_language_id: {
+                post_id: id,
+                language_id: translation.language_id,
+              },
             },
-          },
-          update: {
-            title: translation.title ?? '',
-            description: translation.description ?? '',
-          },
-          create: {
-            //post_id: id,
-            language_id: translation.language_id,
-            title: translation.title ?? '',
-            description: translation.description ?? '',
-          },
-        })),
-      };
+            update: {
+              title: translation.title ?? '',
+              description: translation.description ?? '',
+            },
+            create: {
+              //post_id: id,
+              language_id: translation.language_id,
+              title: translation.title ?? '',
+              description: translation.description ?? '',
+            },
+          })),
+        };
+      }
+
+      // Оновлюємо пост
+      return await this.prisma.post.update({
+        where: { id },
+        data: updateData,
+        include: {
+          translations: true,
+          images: true,
+          country: true,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        'Failed to update post',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-
-    // Оновлюємо пост
-    return await this.prisma.post.update({
-      where: { id },
-      data: updateData,
-      include: {
-        translations: true,
-        images: true,
-        country: true,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    throw new HttpException(
-      'Failed to update post',
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
   }
-}
-
 
   async remove(id: number) {
     // Перевіряємо, чи існує пост
