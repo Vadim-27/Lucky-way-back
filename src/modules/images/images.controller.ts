@@ -6,11 +6,9 @@ import {
   Param,
   Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { Image as PrismaImage } from '@prisma/client'; // Додаємо цей імпорт
 import { CreateImageDto } from './dto/create-image.dto';
-import { UpdateImageDto } from './dto/update-image.dto';
 import { ImageService } from './images.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -63,9 +61,10 @@ export class ImageController {
   @ApiResponse({ status: 400, description: 'Bad request' })
   async update(
     @Param('id') id: number,
-    @Body() data: UpdateImageDto,
+    @Body() url: any, // Очікуємо саме рядок
   ): Promise<PrismaImage> {
-    return this.imageService.updateImage(id, data);
+    console.log('Received URL:', url); // Це має бути рядок
+    return this.imageService.updateImage(id, url);
   }
 
   @Delete(':id')

@@ -33,14 +33,16 @@ let ImageService = class ImageService {
             where: { id },
         });
     }
-    async updateImage(id, data) {
+    async updateImage(id, url) {
         const existingImage = await this.prisma.image.findUnique({ where: { id } });
         if (!existingImage) {
             throw new common_1.HttpException('Image not found', common_1.HttpStatus.NOT_FOUND);
         }
         return this.prisma.image.update({
             where: { id },
-            data,
+            data: {
+                url: url.url,
+            },
         });
     }
     async deleteImage(id) {

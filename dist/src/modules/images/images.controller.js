@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ImageController = void 0;
 const common_1 = require("@nestjs/common");
 const create_image_dto_1 = require("./dto/create-image.dto");
-const update_image_dto_1 = require("./dto/update-image.dto");
 const images_service_1 = require("./images.service");
 const swagger_1 = require("@nestjs/swagger");
 let ImageController = class ImageController {
@@ -31,8 +30,9 @@ let ImageController = class ImageController {
     async findOne(id) {
         return this.imageService.getImageById(id);
     }
-    async update(id, data) {
-        return this.imageService.updateImage(id, data);
+    async update(id, url) {
+        console.log('Received URL:', url);
+        return this.imageService.updateImage(id, url);
     }
     async remove(id) {
         return this.imageService.deleteImage(id);
@@ -89,7 +89,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, update_image_dto_1.UpdateImageDto]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], ImageController.prototype, "update", null);
 __decorate([

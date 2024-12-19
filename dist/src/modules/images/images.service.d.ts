@@ -10,8 +10,6 @@ export declare class ImageService {
     }): Promise<Image>;
     getAllImages(): Promise<Image[]>;
     getImageById(id: number): Promise<Image | null>;
-    updateImage(id: number, data: {
-        url?: string;
-    }): Promise<Image>;
+    updateImage(id: number, url: any): Promise<Image>;
     deleteImage(id: number): Promise<Image>;
 }

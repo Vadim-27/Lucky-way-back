@@ -34,7 +34,9 @@ export class ImageService {
   }
 
   // Оновлення зображення
-  async updateImage(id: number, data: { url?: string }): Promise<Image> {
+  // Оновлення зображення
+  // Оновлення зображення
+  async updateImage(id: number, url: any): Promise<Image> {
     // Перевірка, чи існує зображення
     const existingImage = await this.prisma.image.findUnique({ where: { id } });
 
@@ -45,7 +47,9 @@ export class ImageService {
     // Оновлення зображення
     return this.prisma.image.update({
       where: { id },
-      data,
+      data: {
+        url: url.url, // передається рядок, а не об'єкт
+      },
     });
   }
 
